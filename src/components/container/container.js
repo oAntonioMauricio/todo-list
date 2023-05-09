@@ -9,6 +9,7 @@ const container = () => {
   // main container
   const mainContainer = document.createElement("div");
   mainContainer.classList.add("mainContainer");
+  mainContainer.setAttribute("id", "mainContainer");
   root.append(mainContainer);
 };
 

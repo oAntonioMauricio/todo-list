@@ -1,0 +1,50 @@
+.header {
+  grid-column: 2;
+  padding: 2rem 0;
+}
+
+.projectDiv {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  height: 100%;
+}
+
+.project {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  gap: 12px;
+
+  background-color: white;
+  padding: 0 1rem;
+  border-radius: 24px;
+}
+
+.projectTitle {
+  font-weight: 600;
+}
+
+.projectButton {
+  background-color: #0258ff;
+  padding: 3px;
+  color: #ffffff;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  font-weight: 500;
+  border-radius: 0.5rem;
+  border-style: none;
+
+  display: inline-flex;
+  text-align: center;
+  align-items: center;
+}
+
+.projectButton:hover {
+  background-color: #1e40af;
+}
+
+.svgHeader {
+  width: 1rem;
+  height: 1rem;
+}
