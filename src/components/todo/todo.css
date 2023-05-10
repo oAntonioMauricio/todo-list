@@ -20,7 +20,7 @@
   flex-direction: column;
 }
 
-.todoH3 {
+.todoH4 {
   font-size: 16px;
   font-weight: 600;
   margin-top: 0;
@@ -29,6 +29,10 @@
 .todoFlex {
   display: flex;
   flex-direction: column;
+  gap: 0.75rem;
+}
+
+.todoEl {
   border: 2px solid #dbdbdb;
   border-radius: 0.5rem;
   padding: 0.5rem;
