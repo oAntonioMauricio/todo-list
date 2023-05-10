@@ -8,6 +8,51 @@ const header = (() => {
 
     const container = document.getElementById("mainContainer");
 
+    // - FIRST HALF -
+    // logo section
+    const logoDiv = document.createElement("div");
+    logoDiv.classList.add("logoDiv");
+    container.append(logoDiv);
+
+    // Create a new logo element
+    const logo = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    logo.setAttribute("version", "1.0");
+    logo.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+    logo.setAttribute("width", "50");
+    logo.setAttribute("height", "50");
+    logo.setAttribute("xml:space", "preserve");
+    logo.setAttribute("viewBox", "0 0 100 100");
+
+    // Create a new path element and set its attributes
+    const logoPath1 = document.createElementNS(
+      "http://www.w3.org/2000/svg",
+      "path"
+    );
+    logoPath1.setAttribute("fill", "#0258FF");
+    logoPath1.setAttribute(
+      "d",
+      "M30 58.841h32.246c11.648 0 21.087-9.438 21.087-21.084 0-11.645-9.44-21.09-21.087-21.09H30V10h32.246C77.575 10 90 22.43 90 37.757c0 15.326-12.425 27.751-27.754 27.751H30v-6.667z"
+    );
+
+    // Create a new path element and set its attributes
+    const logoPath2 = document.createElementNS(
+      "http://www.w3.org/2000/svg",
+      "path"
+    );
+    logoPath2.setAttribute("fill", "#263238");
+    logoPath2.setAttribute(
+      "d",
+      "M70 83.333V90H37.754C22.425 90 10 77.57 10 62.243c0-15.326 12.425-27.751 27.754-27.751H70v6.667H37.754c-11.648 0-21.087 9.438-21.087 21.084 0 11.644 9.44 21.09 21.087 21.09H70z"
+    );
+
+    // Append the path elements to the logo element
+    logo.appendChild(logoPath1);
+    logo.appendChild(logoPath2);
+
+    // Append the logo element to the div element
+    logoDiv.appendChild(logo);
+
+    // - SECOND HALF -
     // header html
     const htmlHeader = document.createElement("header");
     htmlHeader.classList.add("header");

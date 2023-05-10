@@ -1,3 +1,12 @@
+.logoDiv {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  grid-column: 1;
+  padding: 2rem 0;
+}
+
 .header {
   grid-column: 2;
   padding: 2rem 0;
