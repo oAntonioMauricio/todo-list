@@ -69,7 +69,7 @@ const header = (() => {
     projectDiv.append(project);
 
     // project title
-    const projectTitle = document.createElement("p");
+    const projectTitle = document.createElement("h3");
     projectTitle.classList.add("projectTitle");
     projectTitle.textContent = "Project";
     project.append(projectTitle);
