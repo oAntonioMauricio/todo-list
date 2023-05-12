@@ -45,6 +45,32 @@ const todo = (() => {
     // build first todo
     const doneEl = buildHtml("todoEl", "div", doneFlex);
     doneEl.textContent = "This task is done!";
+
+    // build newTodo button
+    const newTodo = buildHtml("newTodo", "button", todoTab);
+
+    // build svg icon on the button
+    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    svg.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+    svg.setAttribute("fill", "none");
+    svg.setAttribute("viewBox", "0 0 24 24");
+    svg.setAttribute("stroke-width", "1.5");
+    svg.setAttribute("stroke", "currentColor");
+    svg.setAttribute("class", "svgNewTodo");
+    svg.setAttribute("width", "20"); // set width to 20px
+    svg.setAttribute("height", "20"); // set height to 20px
+
+    const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    path.setAttribute("stroke-linecap", "round");
+    path.setAttribute("stroke-linejoin", "round");
+    path.setAttribute("d", "M12 4.5v15m7.5-7.5h-15");
+
+    svg.appendChild(path);
+    newTodo.prepend(svg);
+
+    // build text for button
+    const textNewTodo = buildHtml("textNewTodo", "p", newTodo);
+    textNewTodo.textContent = "Add Task";
   };
 
   return { build };
