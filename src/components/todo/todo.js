@@ -1,4 +1,5 @@
 import "./todo.css";
+import todoLogic from "../../appLogic/todoLogic";
 
 // build the to do section
 
@@ -33,6 +34,7 @@ const todo = (() => {
 
     // build flex for todo cards
     const todoFlex = buildHtml("todoFlex", "div", todoTab);
+    todoFlex.setAttribute("id", "todoParent");
 
     // build first todo
     const todoEl = buildHtml("todoEl", "div", todoFlex);
@@ -135,6 +137,7 @@ const todo = (() => {
 
     // build form
     const todoForm = buildHtml("todoForm", "form", modalSection);
+    todoForm.setAttribute("id", "todoForm");
 
     // build div for title
     const titleDiv = buildHtml("formDiv", "div", todoForm);
@@ -218,6 +221,8 @@ const todo = (() => {
     // create submit button
     // eslint-disable-next-line no-unused-vars
     const submitForm = buildHtml("submitForm", "button", todoForm, "Submit");
+    submitForm.setAttribute("form", "todoForm");
+    submitForm.setAttribute("type", "submit");
 
     // **** Event Listeners **** //
 
@@ -241,9 +246,41 @@ const todo = (() => {
       modalOverlay.classList.toggle("hidden");
       todoForm.reset();
     });
+
+    // submit form
+    todoForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+      console.log("sending to logic...");
+      const title = titleInput.value;
+      const date = dateInput.value;
+      const priority = {
+        high: highPrior.checked,
+        med: medPrior.checked,
+        low: lowPrior.checked,
+      };
+
+      // actions after submiting
+      todoLogic.createTodo(title, date, priority);
+      // eslint-disable-next-line no-use-before-define
+      updateUi(todoLogic.getData());
+    });
   };
 
-  return { build };
+  const updateUi = (data) => {
+    // select the parent
+    const parent = document.getElementById("todoParent");
+
+    // build new todo
+    // eslint-disable-next-line no-unused-vars
+    const newTodo = buildHtml(
+      "todoEl",
+      "div",
+      parent,
+      data.projects[data.projects.length - 1].title
+    );
+  };
+
+  return { build, updateUi };
 })();
 
 export default todo;
