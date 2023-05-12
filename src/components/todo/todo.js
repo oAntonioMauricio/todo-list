@@ -3,17 +3,17 @@ import "./todo.css";
 // build the to do section
 
 const todo = (() => {
+  // func to build html
+  const buildHtml = (className, element, parent) => {
+    const newEl = document.createElement(element);
+    newEl.classList.add(className);
+    parent.append(newEl);
+    return newEl;
+  };
+
   const build = () => {
     console.log("todo ONLINE");
     const container = document.getElementById("mainContainer");
-
-    // func to build html
-    const buildHtml = (className, element, parent) => {
-      const newEl = document.createElement(element);
-      newEl.classList.add(className);
-      parent.append(newEl);
-      return newEl;
-    };
 
     // build grid for todo bars
     const todoGrid = buildHtml("todoGrid", "div", container);
@@ -71,6 +71,35 @@ const todo = (() => {
     // build text for button
     const textNewTodo = buildHtml("textNewTodo", "p", newTodo);
     textNewTodo.textContent = "Add Task";
+
+    // **** Modal **** //
+
+    // build section for modal
+    const modalSection = buildHtml("modalSection", "section", container);
+    modalSection.classList.add("hidden");
+
+    // build div(overlay) for modal
+    const modalOverlay = buildHtml("modalOverlay", "div", container);
+    modalOverlay.classList.add("hidden");
+
+    // build div/flex for modal
+    const modalDiv = buildHtml("modalDiv", "div", modalSection);
+
+    // build h3
+    const modalH3 = buildHtml("modalH3", "h3", modalDiv);
+    modalH3.textContent = "Modal Here";
+
+    // toggle modal on newTodo button
+    newTodo.addEventListener("click", () => {
+      modalSection.classList.toggle("hidden");
+      modalOverlay.classList.toggle("hidden");
+    });
+
+    // toggle modal on overlay
+    modalOverlay.addEventListener("click", () => {
+      modalSection.classList.toggle("hidden");
+      modalOverlay.classList.toggle("hidden");
+    });
   };
 
   return { build };
