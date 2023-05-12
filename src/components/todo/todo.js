@@ -6,7 +6,9 @@ const todo = (() => {
   // func to build html
   const buildHtml = (className, element, parent, text) => {
     const newEl = document.createElement(element);
-    newEl.classList.add(className);
+    if (className) {
+      newEl.classList.add(className);
+    }
     newEl.textContent = text;
     parent.append(newEl);
     return newEl;
@@ -73,7 +75,16 @@ const todo = (() => {
     const textNewTodo = buildHtml("textNewTodo", "p", newTodo);
     textNewTodo.textContent = "Add Task";
 
-    // **** Modal **** //
+    // ** EXTRA BUILD ** //
+    // run modal build and append event to button arg //
+    // eslint-disable-next-line no-use-before-define
+    buildModal(newTodo);
+  };
+
+  const buildModal = (button) => {
+    console.log("modal ONLINE");
+
+    const container = document.getElementById("mainContainer");
 
     // build section for modal
     const modalSection = buildHtml("modalSection", "section", container);
@@ -87,15 +98,39 @@ const todo = (() => {
     const modalDiv = buildHtml("modalDiv", "div", modalSection);
 
     // build h3
-    const modalH3 = buildHtml("modalH3", "h3", modalDiv);
+    const modalH3 = buildHtml("todoH4", "h4", modalDiv);
     modalH3.textContent = "Add Task";
 
     // build close button
     const closeDiv = buildHtml("closeDiv", "button", modalDiv);
-    closeDiv.textContent = "x";
+
+    // build svg for close button
+    const svgClose = document.createElementNS(
+      "http://www.w3.org/2000/svg",
+      "svg"
+    );
+    svgClose.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+    svgClose.setAttribute("fill", "none");
+    svgClose.setAttribute("viewBox", "0 0 24 24");
+    svgClose.setAttribute("stroke-width", "1.5");
+    svgClose.setAttribute("stroke", "currentColor");
+    svgClose.setAttribute("class", "svgClose");
+    svgClose.setAttribute("width", "20"); // set width to 20px
+    svgClose.setAttribute("height", "20"); // set height to 20px
+
+    const closePath = document.createElementNS(
+      "http://www.w3.org/2000/svg",
+      "path"
+    );
+    closePath.setAttribute("stroke-linecap", "round");
+    closePath.setAttribute("stroke-linejoin", "round");
+    closePath.setAttribute("d", "M6 18L18 6M6 6l12 12");
+
+    svgClose.appendChild(closePath);
+    closeDiv.append(svgClose);
 
     // toggle modal on newTodo button
-    newTodo.addEventListener("click", () => {
+    button.addEventListener("click", () => {
       modalSection.classList.toggle("hidden");
       modalOverlay.classList.toggle("hidden");
     });
@@ -112,7 +147,6 @@ const todo = (() => {
       modalOverlay.classList.toggle("hidden");
     });
 
-    // **** Modal Form **** //
     // build form
     const todoForm = buildHtml("todoForm", "form", modalSection);
 
@@ -120,8 +154,78 @@ const todo = (() => {
     const titleDiv = buildHtml("formDiv", "div", todoForm);
 
     // build label and input for title
+    // eslint-disable-next-line no-unused-vars
     const titleLabel = buildHtml("titleLabel", "label", titleDiv, "Title");
+    // eslint-disable-next-line no-unused-vars
     const titleInput = buildHtml("titleInput", "input", titleDiv);
+
+    // build div for dueDate
+    const dateDiv = buildHtml("formDiv", "div", todoForm);
+
+    // build label and input for dueDate
+    // eslint-disable-next-line no-unused-vars
+    const dateLabel = buildHtml("dateLabel", "label", dateDiv, "Due Date");
+    // eslint-disable-next-line no-unused-vars
+    const dateInput = buildHtml("dateInput", "input", dateDiv);
+
+    // build div for priority
+    const priorDiv = buildHtml("formDiv", "div", todoForm);
+
+    // build label and input for priority
+    // eslint-disable-next-line no-unused-vars
+    const priorLabel = buildHtml("priorLabel", "label", priorDiv, "Priority");
+    const priorSet = buildHtml("priorSet", "div", priorDiv);
+
+    // build div for high label and input
+    const highPriorDiv = buildHtml("priorFlex", "div", priorSet);
+
+    // create a radio button element for the "High" priority level
+    const highPrior = buildHtml(null, "input", highPriorDiv);
+    highPrior.type = "checkbox";
+    highPrior.id = "high";
+    highPrior.name = "priority";
+    highPrior.value = "high";
+
+    // create a label element for the "High" priority level radio button
+    const highPriorLabel = buildHtml(null, "label", highPriorDiv);
+    highPriorLabel.textContent = "High";
+    highPriorLabel.setAttribute("for", "high");
+
+    // build div for medium label and input
+    const medPriorDiv = buildHtml("priorFlex", "div", priorSet);
+
+    // create a radio button element for the "Medium" priority level
+    const medPrior = buildHtml(null, "input", medPriorDiv);
+    medPrior.type = "checkbox";
+    medPrior.id = "medium";
+    medPrior.name = "priority";
+    medPrior.value = "medium";
+
+    // create a label element for the "Medium" priority level radio button
+    const medPriorLabel = buildHtml(null, "label", medPriorDiv);
+    medPriorLabel.textContent = "Medium";
+    medPriorLabel.setAttribute("for", "medium");
+
+    // build div for low label and input
+    const lowPriorDiv = buildHtml("priorFlex", "div", priorSet);
+
+    // create a radio button element for the "Low" priority level
+    const lowPrior = buildHtml(null, "input", lowPriorDiv);
+    lowPrior.type = "checkbox";
+    lowPrior.id = "low";
+    lowPrior.name = "priority";
+    lowPrior.value = "low";
+
+    // create a label element for the "Low" priority level radio button
+    const lowPriorLabel = buildHtml(null, "label", lowPriorDiv);
+    lowPriorLabel.textContent = "Low";
+    lowPriorLabel.setAttribute("for", "low");
+
+    // create submit button
+    // eslint-disable-next-line no-unused-vars
+    const submitForm = buildHtml("submitForm", "button", todoForm, "Submit");
+
+    // **** Modal **** //
   };
 
   return { build };
