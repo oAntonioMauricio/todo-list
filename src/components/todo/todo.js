@@ -4,9 +4,10 @@ import "./todo.css";
 
 const todo = (() => {
   // func to build html
-  const buildHtml = (className, element, parent) => {
+  const buildHtml = (className, element, parent, text) => {
     const newEl = document.createElement(element);
     newEl.classList.add(className);
+    newEl.textContent = text;
     parent.append(newEl);
     return newEl;
   };
@@ -87,7 +88,11 @@ const todo = (() => {
 
     // build h3
     const modalH3 = buildHtml("modalH3", "h3", modalDiv);
-    modalH3.textContent = "Modal Here";
+    modalH3.textContent = "Add Task";
+
+    // build close button
+    const closeDiv = buildHtml("closeDiv", "button", modalDiv);
+    closeDiv.textContent = "x";
 
     // toggle modal on newTodo button
     newTodo.addEventListener("click", () => {
@@ -100,6 +105,23 @@ const todo = (() => {
       modalSection.classList.toggle("hidden");
       modalOverlay.classList.toggle("hidden");
     });
+
+    // toggle modal on close button
+    closeDiv.addEventListener("click", () => {
+      modalSection.classList.toggle("hidden");
+      modalOverlay.classList.toggle("hidden");
+    });
+
+    // **** Modal Form **** //
+    // build form
+    const todoForm = buildHtml("todoForm", "form", modalSection);
+
+    // build div for title
+    const titleDiv = buildHtml("formDiv", "div", todoForm);
+
+    // build label and input for title
+    const titleLabel = buildHtml("titleLabel", "label", titleDiv, "Title");
+    const titleInput = buildHtml("titleInput", "input", titleDiv);
   };
 
   return { build };
