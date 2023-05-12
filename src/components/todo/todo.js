@@ -3,6 +3,8 @@ import "./todo.css";
 // build the to do section
 
 const todo = (() => {
+  //
+
   // func to build html
   const buildHtml = (className, element, parent, text) => {
     const newEl = document.createElement(element);
@@ -14,6 +16,7 @@ const todo = (() => {
     return newEl;
   };
 
+  // main build func
   const build = () => {
     console.log("todo ONLINE");
     const container = document.getElementById("mainContainer");
@@ -81,6 +84,7 @@ const todo = (() => {
     buildModal(newTodo);
   };
 
+  // func to build the modal
   const buildModal = (button) => {
     console.log("modal ONLINE");
 
@@ -129,24 +133,6 @@ const todo = (() => {
     svgClose.appendChild(closePath);
     closeDiv.append(svgClose);
 
-    // toggle modal on newTodo button
-    button.addEventListener("click", () => {
-      modalSection.classList.toggle("hidden");
-      modalOverlay.classList.toggle("hidden");
-    });
-
-    // toggle modal on overlay
-    modalOverlay.addEventListener("click", () => {
-      modalSection.classList.toggle("hidden");
-      modalOverlay.classList.toggle("hidden");
-    });
-
-    // toggle modal on close button
-    closeDiv.addEventListener("click", () => {
-      modalSection.classList.toggle("hidden");
-      modalOverlay.classList.toggle("hidden");
-    });
-
     // build form
     const todoForm = buildHtml("todoForm", "form", modalSection);
 
@@ -156,8 +142,12 @@ const todo = (() => {
     // build label and input for title
     // eslint-disable-next-line no-unused-vars
     const titleLabel = buildHtml("titleLabel", "label", titleDiv, "Title");
+    titleLabel.setAttribute("for", "title");
     // eslint-disable-next-line no-unused-vars
     const titleInput = buildHtml("titleInput", "input", titleDiv);
+    titleInput.type = "text";
+    titleInput.id = "title";
+    titleInput.name = "title";
 
     // build div for dueDate
     const dateDiv = buildHtml("formDiv", "div", todoForm);
@@ -165,8 +155,12 @@ const todo = (() => {
     // build label and input for dueDate
     // eslint-disable-next-line no-unused-vars
     const dateLabel = buildHtml("dateLabel", "label", dateDiv, "Due Date");
+    dateLabel.setAttribute("for", "date");
     // eslint-disable-next-line no-unused-vars
     const dateInput = buildHtml("dateInput", "input", dateDiv);
+    dateInput.type = "date";
+    dateInput.id = "date";
+    dateInput.name = "date";
 
     // build div for priority
     const priorDiv = buildHtml("formDiv", "div", todoForm);
@@ -225,7 +219,28 @@ const todo = (() => {
     // eslint-disable-next-line no-unused-vars
     const submitForm = buildHtml("submitForm", "button", todoForm, "Submit");
 
-    // **** Modal **** //
+    // **** Event Listeners **** //
+
+    // toggle modal on newTodo button
+    button.addEventListener("click", () => {
+      modalSection.classList.toggle("hidden");
+      modalOverlay.classList.toggle("hidden");
+      titleInput.focus();
+    });
+
+    // toggle modal on overlay
+    modalOverlay.addEventListener("click", () => {
+      modalSection.classList.toggle("hidden");
+      modalOverlay.classList.toggle("hidden");
+      todoForm.reset();
+    });
+
+    // toggle modal on close button
+    closeDiv.addEventListener("click", () => {
+      modalSection.classList.toggle("hidden");
+      modalOverlay.classList.toggle("hidden");
+      todoForm.reset();
+    });
   };
 
   return { build };
