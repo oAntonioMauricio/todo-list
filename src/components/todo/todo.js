@@ -87,6 +87,7 @@ const todo = (() => {
     // run modal build and append event to button arg //
     // eslint-disable-next-line no-use-before-define
     buildModal(newTodo);
+    deleteModal();
   };
 
   // func to build box (text + buttons)
@@ -162,6 +163,7 @@ const todo = (() => {
     svgDelete.setAttribute("stroke", "currentColor");
     svgDelete.setAttribute("width", svgSize);
     svgDelete.setAttribute("height", svgSize);
+    svgDelete.setAttribute("id", "svgDelete");
 
     const deletePath = document.createElementNS(
       "http://www.w3.org/2000/svg",
@@ -176,15 +178,28 @@ const todo = (() => {
     svgDelete.appendChild(deletePath);
     newOption.append(svgDelete);
 
-    // event listeners
-    svgDelete.addEventListener("click", () => {
-      console.log("clicked on delete.");
-      const modalOverlay = document.getElementById("modalOverlay");
+    // *** event listeners ***
+
+    svgDelete.addEventListener("click", (e) => {
+      //
+      console.log("Delete element clicked!");
+
+      // overlay
+      const modalOverlay = document.getElementById("deleteOverlay");
       modalOverlay.classList.toggle("hidden");
+
+      // modal
+      const deleteModal = document.getElementById("deleteSection");
+      deleteModal.classList.toggle("hidden");
+
+      // Delete text
+      const textDisplay = document.getElementById("deleteText");
+      const deleteText = e.target.parentNode.previousElementSibling.textContent;
+      textDisplay.textContent = deleteText;
     });
   };
 
-  // func to build the modal
+  // func to build the add new modal
   const buildModal = (button) => {
     console.log("modal ONLINE");
 
@@ -365,6 +380,88 @@ const todo = (() => {
     });
   };
 
+  // func to build the delete modal
+  const deleteModal = (button) => {
+    const container = document.getElementById("mainContainer");
+
+    // build section for modal
+    const modalSection = buildHtml("modalSection", "section", container);
+    modalSection.classList.add("hidden");
+    modalSection.setAttribute("id", "deleteSection");
+
+    // build div(overlay) for modal
+    const modalOverlay = buildHtml("modalOverlay", "div", container);
+    modalOverlay.classList.add("hidden");
+    modalOverlay.setAttribute("id", "deleteOverlay");
+
+    // build div/flex for modal
+    const modalDiv = buildHtml("modalDiv", "div", modalSection);
+
+    // build h3
+    const modalH3 = buildHtml("todoH4", "h4", modalDiv);
+    modalH3.textContent = "Delete The Task?";
+
+    // build close button
+    const closeDiv = buildHtml("closeDiv", "button", modalDiv);
+
+    // build svg for close button
+    const svgClose = document.createElementNS(
+      "http://www.w3.org/2000/svg",
+      "svg"
+    );
+    svgClose.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+    svgClose.setAttribute("fill", "none");
+    svgClose.setAttribute("viewBox", "0 0 24 24");
+    svgClose.setAttribute("stroke-width", "1.5");
+    svgClose.setAttribute("stroke", "currentColor");
+    svgClose.setAttribute("class", "svgClose");
+    svgClose.setAttribute("width", "20"); // set width to 20px
+    svgClose.setAttribute("height", "20"); // set height to 20px
+
+    const closePath = document.createElementNS(
+      "http://www.w3.org/2000/svg",
+      "path"
+    );
+    closePath.setAttribute("stroke-linecap", "round");
+    closePath.setAttribute("stroke-linejoin", "round");
+    closePath.setAttribute("d", "M6 18L18 6M6 6l12 12");
+
+    svgClose.appendChild(closePath);
+    closeDiv.append(svgClose);
+
+    // Create text from task
+    const todoText = buildHtml("deleteText", "div", modalSection);
+    todoText.textContent = "text here";
+    todoText.setAttribute("id", "deleteText");
+
+    // create submit button
+    const confirmDelete = buildHtml(
+      "submitForm",
+      "button",
+      modalSection,
+      "Confirm"
+    );
+
+    // *** event listeners ***
+
+    // toggle modal on overlay
+    modalOverlay.addEventListener("click", () => {
+      modalSection.classList.add("hidden");
+      modalOverlay.classList.add("hidden");
+    });
+
+    // toggle modal on close button
+    closeDiv.addEventListener("click", () => {
+      modalSection.classList.toggle("hidden");
+      modalOverlay.classList.toggle("hidden");
+    });
+
+    // delete method
+    confirmDelete.addEventListener("click", () => {
+      console.log("deelting task...");
+    });
+  };
+
   // func to update ui
   const updateUi = (data) => {
     // select the parent
@@ -379,7 +476,7 @@ const todo = (() => {
   };
 
   // func to delete ui
-  const deleteUi = (data) => {};
+  const deleteUi = (type, number) => {};
 
   return { build, updateUi };
 })();

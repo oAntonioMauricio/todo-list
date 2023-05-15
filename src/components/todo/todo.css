@@ -57,6 +57,10 @@
   color: #0258ff;
 }
 
+.todoOption svg path {
+  pointer-events: none;
+}
+
 .newTodo {
   display: flex;
   justify-content: start;
