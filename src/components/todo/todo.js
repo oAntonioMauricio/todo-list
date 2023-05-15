@@ -52,6 +52,7 @@ const todo = (() => {
 
     // build flex for done cards
     const doneFlex = buildHtml("todoFlex", "div", doneTab);
+    doneFlex.setAttribute("id", "doneParent");
 
     // build done container
     const doneBox = buildHtml("todoBox", "div", doneFlex);
@@ -91,10 +92,11 @@ const todo = (() => {
   };
 
   // func to build box (text + buttons)
-  const todoComplete = (text, parent) => {
+  const todoComplete = (text, parent, index) => {
     const newBox = buildHtml("todoBox", "div", parent);
     const newEl = buildHtml("todoEl", "div", newBox);
     newEl.textContent = text;
+    newEl.setAttribute("data-index", index);
     const newOption = buildHtml("todoOption", "div", newBox);
 
     // Svg size
@@ -458,7 +460,7 @@ const todo = (() => {
 
     // delete method
     confirmDelete.addEventListener("click", () => {
-      console.log("deelting task...");
+      console.log("deleting task...");
     });
   };
 
@@ -466,13 +468,26 @@ const todo = (() => {
   const updateUi = (data) => {
     // select the parent
     const parent = document.getElementById("todoParent");
+    const doneParent = document.getElementById("doneParent");
 
-    // build new todo
-    // eslint-disable-next-line no-unused-vars
-    const newTodo = todoComplete(
-      data.projects.todo[data.projects.todo.length - 1].title,
-      parent
-    );
+    // remove every todo
+    while (parent.firstChild) {
+      parent.removeChild(parent.firstChild);
+    }
+
+    while (doneParent.firstChild) {
+      doneParent.removeChild(doneParent.firstChild);
+    }
+
+    // build all the todos in DB
+    data.projects.todo.forEach((e) => {
+      todoComplete(e.title, parent, data.projects.todo.indexOf(e));
+    });
+
+    // build all the done's
+    data.projects.done.forEach((e) => {
+      console.log("updating dones for db...");
+    });
   };
 
   // func to delete ui
