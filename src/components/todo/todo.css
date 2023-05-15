@@ -34,11 +34,27 @@
   gap: 0.75rem;
 }
 
-.todoEl {
+.todoBox {
+  display: flex;
+  flex-direction: column;
   border: 2px solid #dbdbdb;
   border-radius: 0.3rem;
   padding: 0.5rem;
-  gap: 5px;
+  gap: 0.75rem;
+}
+
+.todoOption {
+  display: flex;
+  gap: 1rem;
+}
+
+.todoOption svg {
+  color: #8a8a8a;
+  cursor: pointer;
+}
+
+.todoOption svg:hover {
+  color: #0258ff;
 }
 
 .newTodo {

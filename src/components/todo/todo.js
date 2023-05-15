@@ -36,26 +36,29 @@ const todo = (() => {
     const todoFlex = buildHtml("todoFlex", "div", todoTab);
     todoFlex.setAttribute("id", "todoParent");
 
-    // build first todo
-    const todoEl = buildHtml("todoEl", "div", todoFlex);
-    todoEl.textContent = "This is your first task.";
+    // build box with text + buttons
+    // eslint-disable-next-line no-use-before-define
+    todoComplete("First task!", todoFlex);
+
+    // build newTodo button
+    const newTodo = buildHtml("newTodo", "button", todoTab);
 
     // build done tab
     const doneTab = buildHtml("todoTab", "div", todoGrid);
 
-    // build h3 for todo tab
+    // build h3 for done tab
     const doneH4 = buildHtml("todoH4", "h4", doneTab);
     doneH4.textContent = "Done";
 
-    // build flex for todo cards
+    // build flex for done cards
     const doneFlex = buildHtml("todoFlex", "div", doneTab);
 
-    // build first todo
-    const doneEl = buildHtml("todoEl", "div", doneFlex);
-    doneEl.textContent = "This task is done!";
+    // build done container
+    const doneBox = buildHtml("todoBox", "div", doneFlex);
 
-    // build newTodo button
-    const newTodo = buildHtml("newTodo", "button", todoTab);
+    // build first done
+    const doneEl = buildHtml("todoEl", "div", doneBox);
+    doneEl.textContent = "This task is done!";
 
     // build svg icon on the button
     const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
@@ -86,6 +89,101 @@ const todo = (() => {
     buildModal(newTodo);
   };
 
+  // func to build box (text + buttons)
+  const todoComplete = (text, parent) => {
+    const newBox = buildHtml("todoBox", "div", parent);
+    const newEl = buildHtml("todoEl", "div", newBox);
+    newEl.textContent = text;
+    const newOption = buildHtml("todoOption", "div", newBox);
+
+    // Svg size
+    const svgSize = "20";
+
+    // svg complete
+    const svgComplete = document.createElementNS(
+      "http://www.w3.org/2000/svg",
+      "svg"
+    );
+    svgComplete.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+    svgComplete.setAttribute("fill", "none");
+    svgComplete.setAttribute("viewBox", "0 0 24 24");
+    svgComplete.setAttribute("stroke-width", "1.5");
+    svgComplete.setAttribute("stroke", "currentColor");
+    svgComplete.setAttribute("width", svgSize);
+    svgComplete.setAttribute("height", svgSize);
+
+    const completePath = document.createElementNS(
+      "http://www.w3.org/2000/svg",
+      "path"
+    );
+    completePath.setAttribute("stroke-linecap", "round");
+    completePath.setAttribute("stroke-linejoin", "round");
+    completePath.setAttribute("d", "M4.5 12.75l6 6 9-13.5");
+
+    svgComplete.appendChild(completePath);
+    newOption.appendChild(svgComplete);
+
+    // svg edit
+    const svgEdit = document.createElementNS(
+      "http://www.w3.org/2000/svg",
+      "svg"
+    );
+    svgEdit.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+    svgEdit.setAttribute("fill", "none");
+    svgEdit.setAttribute("viewBox", "0 0 24 24");
+    svgEdit.setAttribute("stroke-width", "1.5");
+    svgEdit.setAttribute("stroke", "currentColor");
+    svgEdit.setAttribute("width", svgSize);
+    svgEdit.setAttribute("height", svgSize);
+
+    const editPath = document.createElementNS(
+      "http://www.w3.org/2000/svg",
+      "path"
+    );
+    editPath.setAttribute("stroke-linecap", "round");
+    editPath.setAttribute("stroke-linejoin", "round");
+    editPath.setAttribute(
+      "d",
+      "M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"
+    );
+
+    svgEdit.appendChild(editPath);
+    newOption.appendChild(svgEdit);
+
+    // svg delete
+    const svgDelete = document.createElementNS(
+      "http://www.w3.org/2000/svg",
+      "svg"
+    );
+    svgDelete.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+    svgDelete.setAttribute("fill", "none");
+    svgDelete.setAttribute("viewBox", "0 0 24 24");
+    svgDelete.setAttribute("stroke-width", "1.5");
+    svgDelete.setAttribute("stroke", "currentColor");
+    svgDelete.setAttribute("width", svgSize);
+    svgDelete.setAttribute("height", svgSize);
+
+    const deletePath = document.createElementNS(
+      "http://www.w3.org/2000/svg",
+      "path"
+    );
+    deletePath.setAttribute("stroke-linecap", "round");
+    deletePath.setAttribute("stroke-linejoin", "round");
+    deletePath.setAttribute(
+      "d",
+      "M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
+    );
+    svgDelete.appendChild(deletePath);
+    newOption.append(svgDelete);
+
+    // event listeners
+    svgDelete.addEventListener("click", () => {
+      console.log("clicked on delete.");
+      const modalOverlay = document.getElementById("modalOverlay");
+      modalOverlay.classList.toggle("hidden");
+    });
+  };
+
   // func to build the modal
   const buildModal = (button) => {
     console.log("modal ONLINE");
@@ -99,6 +197,7 @@ const todo = (() => {
     // build div(overlay) for modal
     const modalOverlay = buildHtml("modalOverlay", "div", container);
     modalOverlay.classList.add("hidden");
+    modalOverlay.setAttribute("id", "modalOverlay");
 
     // build div/flex for modal
     const modalDiv = buildHtml("modalDiv", "div", modalSection);
@@ -235,8 +334,8 @@ const todo = (() => {
 
     // toggle modal on overlay
     modalOverlay.addEventListener("click", () => {
-      modalSection.classList.toggle("hidden");
-      modalOverlay.classList.toggle("hidden");
+      modalSection.classList.add("hidden");
+      modalOverlay.classList.add("hidden");
       todoForm.reset();
     });
 
@@ -260,25 +359,27 @@ const todo = (() => {
       };
 
       // actions after submiting
-      todoLogic.createTodo(title, date, priority);
+      todoLogic.createTodo({ title, date, priority });
       // eslint-disable-next-line no-use-before-define
       updateUi(todoLogic.getData());
     });
   };
 
+  // func to update ui
   const updateUi = (data) => {
     // select the parent
     const parent = document.getElementById("todoParent");
 
     // build new todo
     // eslint-disable-next-line no-unused-vars
-    const newTodo = buildHtml(
-      "todoEl",
-      "div",
-      parent,
-      data.projects[data.projects.length - 1].title
+    const newTodo = todoComplete(
+      data.projects.todo[data.projects.todo.length - 1].title,
+      parent
     );
   };
+
+  // func to delete ui
+  const deleteUi = (data) => {};
 
   return { build, updateUi };
 })();

@@ -2,13 +2,17 @@
 const todoLogic = (() => {
   //
   const saveTodo = {
-    projects: [],
+    projects: { todo: [], done: [] },
   };
 
-  const createTodo = (title, dueDate, priority) => {
-    console.log("running Logic...");
-    saveTodo.projects.push({ title, dueDate, priority });
-    console.log(saveTodo.projects);
+  const createTodo = (data) => {
+    if (typeof data === "object") {
+      console.log("Running Logic...");
+      saveTodo.projects.todo.push(data);
+      console.log(saveTodo.projects);
+    } else {
+      console.log("Invalid argument. Please provide an object.");
+    }
   };
 
   const getData = () => saveTodo;
