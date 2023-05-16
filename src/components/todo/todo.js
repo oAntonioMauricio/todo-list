@@ -19,6 +19,7 @@ const todo = (() => {
 
   // main build func
   const build = () => {
+    // eslint-disable-next-line no-console
     console.log("todo ONLINE");
     const container = document.getElementById("mainContainer");
 
@@ -38,7 +39,7 @@ const todo = (() => {
 
     // build box with text + buttons
     // eslint-disable-next-line no-use-before-define
-    todoComplete("First task!", todoFlex);
+    todoComplete("Write your first task and I will disapear :)", todoFlex);
 
     // build newTodo button
     const newTodo = buildHtml("newTodo", "button", todoTab);
@@ -88,6 +89,7 @@ const todo = (() => {
     // run modal build and append event to button arg //
     // eslint-disable-next-line no-use-before-define
     buildModal(newTodo);
+    // eslint-disable-next-line no-use-before-define
     deleteModal();
   };
 
@@ -184,6 +186,7 @@ const todo = (() => {
 
     svgDelete.addEventListener("click", (e) => {
       //
+      // eslint-disable-next-line no-console
       console.log("Delete element clicked!");
 
       // overlay
@@ -198,11 +201,15 @@ const todo = (() => {
       const textDisplay = document.getElementById("deleteText");
       const deleteText = e.target.parentNode.previousElementSibling.textContent;
       textDisplay.textContent = deleteText;
+      const indexDisplay =
+        e.target.parentNode.previousElementSibling.getAttribute("data-index");
+      textDisplay.setAttribute("data-index", indexDisplay);
     });
   };
 
   // func to build the add new modal
   const buildModal = (button) => {
+    // eslint-disable-next-line no-console
     console.log("modal ONLINE");
 
     const container = document.getElementById("mainContainer");
@@ -366,6 +373,7 @@ const todo = (() => {
     // submit form
     todoForm.addEventListener("submit", (event) => {
       event.preventDefault();
+      // eslint-disable-next-line no-console
       console.log("sending to logic...");
       const title = titleInput.value;
       const date = dateInput.value;
@@ -378,12 +386,15 @@ const todo = (() => {
       // actions after submiting
       todoLogic.createTodo({ title, date, priority });
       // eslint-disable-next-line no-use-before-define
-      updateUi(todoLogic.getData());
+      updateUi();
+      modalSection.classList.toggle("hidden");
+      modalOverlay.classList.toggle("hidden");
+      todoForm.reset();
     });
   };
 
   // func to build the delete modal
-  const deleteModal = (button) => {
+  const deleteModal = () => {
     const container = document.getElementById("mainContainer");
 
     // build section for modal
@@ -460,12 +471,19 @@ const todo = (() => {
 
     // delete method
     confirmDelete.addEventListener("click", () => {
-      console.log("deleting task...");
+      // eslint-disable-next-line no-console
+      console.log("sending delete index to db...");
+      const taskToDelete = document.getElementById("deleteText");
+      todoLogic.deleteTodo("todo", taskToDelete.getAttribute("data-index"));
+      // eslint-disable-next-line no-use-before-define
+      updateUi();
+      modalSection.classList.toggle("hidden");
+      modalOverlay.classList.toggle("hidden");
     });
   };
 
   // func to update ui
-  const updateUi = (data) => {
+  const updateUi = (data = todoLogic.getData()) => {
     // select the parent
     const parent = document.getElementById("todoParent");
     const doneParent = document.getElementById("doneParent");
@@ -485,13 +503,10 @@ const todo = (() => {
     });
 
     // build all the done's
-    data.projects.done.forEach((e) => {
-      console.log("updating dones for db...");
-    });
+    data.projects.done.forEach(() => {});
   };
 
   // func to delete ui
-  const deleteUi = (type, number) => {};
 
   return { build, updateUi };
 })();
