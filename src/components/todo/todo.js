@@ -94,11 +94,12 @@ const todo = (() => {
   };
 
   // func to build box (text + buttons)
-  const todoComplete = (text, parent, index) => {
+  const todoComplete = (text, parent, index, section) => {
     const newBox = buildHtml("todoBox", "div", parent);
     const newEl = buildHtml("todoEl", "div", newBox);
     newEl.textContent = text;
     newEl.setAttribute("data-index", index);
+    newEl.setAttribute("section", section);
     const newOption = buildHtml("todoOption", "div", newBox);
 
     // Svg size
@@ -184,6 +185,27 @@ const todo = (() => {
 
     // *** event listeners ***
 
+    // task done icon
+    svgComplete.addEventListener("click", (e) => {
+      console.log("task done... sending to db");
+      const project = document
+        .getElementById("projectTitle")
+        .textContent.toLowerCase();
+      const from = "todo";
+      const moveIndex =
+        e.target.parentNode.parentNode.firstChild.getAttribute("data-index");
+      const to = "done";
+      todoLogic.moveTodo(project, from, moveIndex, to);
+      // eslint-disable-next-line no-use-before-define
+      updateUi();
+    });
+
+    // modify todo icon
+    svgEdit.addEventListener("click", () => {
+      alert("Under maintenance. Sorry for the inconvenience.");
+    });
+
+    // delete/thrash icon
     svgDelete.addEventListener("click", (e) => {
       //
       // eslint-disable-next-line no-console
@@ -502,8 +524,10 @@ const todo = (() => {
       todoComplete(e.title, parent, data.projects.todo.indexOf(e));
     });
 
-    // build all the done's
-    data.projects.done.forEach(() => {});
+    // // build all the done's
+    data.projects.done.forEach((e) => {
+      todoComplete(e.title, doneParent, data.projects.done.indexOf(e));
+    });
   };
 
   // func to delete ui

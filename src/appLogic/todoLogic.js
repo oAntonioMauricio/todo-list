@@ -19,6 +19,15 @@ const todoLogic = (() => {
     }
   };
 
+  // move Todo
+  const moveTodo = (project, from, index, to) => {
+    // eslint-disable-next-line no-console
+    console.log("moving todo to a differente category");
+    const todoMoving = saveTodo[project][from].splice(index, 1)[0];
+    saveTodo[project][to].push(todoMoving);
+    console.log(saveTodo);
+  };
+
   // delete task from DB
   const deleteTodo = (category, index) => {
     // eslint-disable-next-line no-console
@@ -30,7 +39,7 @@ const todoLogic = (() => {
 
   const getData = () => saveTodo;
 
-  return { createTodo, deleteTodo, getData };
+  return { createTodo, moveTodo, deleteTodo, getData };
 })();
 
 export default todoLogic;

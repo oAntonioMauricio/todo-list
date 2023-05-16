@@ -71,7 +71,8 @@ const header = (() => {
     // project title
     const projectTitle = document.createElement("h3");
     projectTitle.classList.add("projectTitle");
-    projectTitle.textContent = "Project";
+    projectTitle.textContent = "Projects";
+    projectTitle.setAttribute("id", "projectTitle");
     project.append(projectTitle);
 
     // project button
