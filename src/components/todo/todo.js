@@ -137,8 +137,38 @@ const todo = (() => {
     completePath.setAttribute("d", "M4.5 12.75l6 6 9-13.5");
 
     svgComplete.appendChild(completePath);
+
+    // ** Do not render on the done section **
     if (section !== "done") {
       newOption.appendChild(svgComplete);
+    }
+
+    // svg undo
+    const undoSvg = document.createElementNS(
+      "http://www.w3.org/2000/svg",
+      "svg"
+    );
+    undoSvg.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+    undoSvg.setAttribute("fill", "none");
+    undoSvg.setAttribute("viewBox", "0 0 24 24");
+    undoSvg.setAttribute("stroke-width", "1.5");
+    undoSvg.setAttribute("stroke", "currentColor");
+    undoSvg.setAttribute("width", svgSize);
+    undoSvg.setAttribute("height", svgSize);
+
+    const undoPath = document.createElementNS(
+      "http://www.w3.org/2000/svg",
+      "path"
+    );
+    undoPath.setAttribute("stroke-linecap", "round");
+    undoPath.setAttribute("stroke-linejoin", "round");
+    undoPath.setAttribute("d", "M9 15L3 9m0 0l6-6M3 9h12a6 6 0 010 12h-3");
+
+    undoSvg.appendChild(undoPath);
+
+    // ** render only on the done section
+    if (section === "done") {
+      newOption.appendChild(undoSvg);
     }
 
     // svg edit
@@ -212,6 +242,23 @@ const todo = (() => {
         e.target.parentNode.parentNode.firstChild.getAttribute("data-index");
       const to = "done";
       todoLogic.moveTodo(project, from, moveIndex, to);
+      // update the whole ui
+      // eslint-disable-next-line no-use-before-define
+      updateUi();
+    });
+
+    // undo task icon
+    undoSvg.addEventListener("click", (e) => {
+      console.log("reverting task to todo...");
+      const project = document
+        .getElementById("projectTitle")
+        .textContent.toLowerCase();
+      const from = "done";
+      const moveIndex =
+        e.target.parentNode.parentNode.firstChild.getAttribute("data-index");
+      const to = "todo";
+      todoLogic.moveTodo(project, from, moveIndex, to);
+      // update the whole ui
       // eslint-disable-next-line no-use-before-define
       updateUi();
     });
