@@ -242,6 +242,9 @@ const todo = (() => {
       const indexDisplay =
         e.target.parentNode.previousElementSibling.getAttribute("data-index");
       textDisplay.setAttribute("data-index", indexDisplay);
+      const sectionDisplay =
+        e.target.parentNode.previousElementSibling.getAttribute("section");
+      textDisplay.setAttribute("section", sectionDisplay);
     });
   };
 
@@ -512,7 +515,10 @@ const todo = (() => {
       // eslint-disable-next-line no-console
       console.log("sending delete index to db...");
       const taskToDelete = document.getElementById("deleteText");
-      todoLogic.deleteTodo("todo", taskToDelete.getAttribute("data-index"));
+      const index = taskToDelete.getAttribute("data-index");
+      const section = taskToDelete.getAttribute("section");
+      console.log(section);
+      todoLogic.deleteTodo(section, index);
       // eslint-disable-next-line no-use-before-define
       updateUi();
       modalSection.classList.toggle("hidden");

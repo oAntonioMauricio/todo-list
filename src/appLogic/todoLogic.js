@@ -5,7 +5,7 @@ const todoLogic = (() => {
     projects: {
       todo: [
         {
-          title: "Car",
+          title: "Your first task!",
           date: "",
           priority: {
             high: false,
