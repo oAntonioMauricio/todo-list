@@ -160,3 +160,16 @@
 .submitForm:hover {
   background-color: #024fe9;
 }
+
+@media only screen and (max-width: 767px) {
+  /* CSS rules for mobile devices */
+  .todoGrid {
+    grid-column: 1/3;
+    display: grid;
+    grid-template-columns: 100% 100%;
+    padding: 25px;
+    gap: 2rem;
+    overflow: auto;
+    grid-auto-flow: row;
+  }
+}
