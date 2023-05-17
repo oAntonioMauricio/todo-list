@@ -233,6 +233,7 @@ const todo = (() => {
 
     // task done icon
     svgComplete.addEventListener("click", (e) => {
+      // eslint-disable-next-line no-console
       console.log("task done... sending to db");
       const project = document
         .getElementById("projectTitle")
