@@ -25,24 +25,7 @@ const todo = (() => {
 
     // build grid for todo bars
     const todoGrid = buildHtml("todoGrid", "div", container);
-
-    // build todo tab
-    const todoTab = buildHtml("todoTab", "div", todoGrid);
-
-    // build h3 for todo tab
-    const todoH4 = buildHtml("todoH4", "h4", todoTab);
-    todoH4.textContent = "To Do";
-
-    // build flex for todo cards
-    const todoFlex = buildHtml("todoFlex", "div", todoTab);
-    todoFlex.setAttribute("id", "todoParent");
-
-    // build box with text + buttons
-    // eslint-disable-next-line no-use-before-define
-    todoComplete("Write your first task and I will disapear :)", todoFlex);
-
-    // build newTodo button
-    const newTodo = buildHtml("newTodo", "button", todoTab);
+    todoGrid.setAttribute("id", "todoGrid");
 
     // build done tab
     const doneTab = buildHtml("todoTab", "div", todoGrid);
@@ -62,45 +45,72 @@ const todo = (() => {
     const doneEl = buildHtml("todoEl", "div", doneBox);
     doneEl.textContent = "This task is done!";
 
-    // build svg icon on the button
-    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-    svg.setAttribute("xmlns", "http://www.w3.org/2000/svg");
-    svg.setAttribute("fill", "none");
-    svg.setAttribute("viewBox", "0 0 24 24");
-    svg.setAttribute("stroke-width", "1.5");
-    svg.setAttribute("stroke", "currentColor");
-    svg.setAttribute("class", "svgNewTodo");
-    svg.setAttribute("width", "20"); // set width to 20px
-    svg.setAttribute("height", "20"); // set height to 20px
-
-    const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
-    path.setAttribute("stroke-linecap", "round");
-    path.setAttribute("stroke-linejoin", "round");
-    path.setAttribute("d", "M12 4.5v15m7.5-7.5h-15");
-
-    svg.appendChild(path);
-    newTodo.prepend(svg);
-
-    // build text for button
-    const textNewTodo = buildHtml("textNewTodo", "p", newTodo);
-    textNewTodo.textContent = "Add Task";
-
-    // ** EXTRA BUILD ** //
-    // run modal build and append event to button arg //
     // eslint-disable-next-line no-use-before-define
-    buildModal(newTodo);
-    // eslint-disable-next-line no-use-before-define
-    deleteModal();
+    updateUi();
+  };
+
+  // func to build sections (name of the category: todo, done, etc..)
+  const buildSection = (h4) => {
+    const todoGrid = document.getElementById("todoGrid");
+
+    // build todo tab
+    const todoTab = buildHtml("todoTab", "div", todoGrid);
+
+    // build h3 for todo tab
+    const todoH4 = buildHtml("todoH4", "h4", todoTab);
+    todoH4.textContent = h4;
+
+    // build flex for todo cards
+    const todoFlex = buildHtml("todoFlex", "div", todoTab);
+    todoFlex.setAttribute("id", `${h4}Parent`);
+
+    if (h4 !== "done") {
+      // build newTodo button
+      const newTodo = buildHtml("newTodo", "button", todoTab);
+
+      // build svg icon on the button
+      const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+      svg.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+      svg.setAttribute("fill", "none");
+      svg.setAttribute("viewBox", "0 0 24 24");
+      svg.setAttribute("stroke-width", "1.5");
+      svg.setAttribute("stroke", "currentColor");
+      svg.setAttribute("class", "svgNewTodo");
+      svg.setAttribute("width", "20"); // set width to 20px
+      svg.setAttribute("height", "20"); // set height to 20px
+
+      const path = document.createElementNS(
+        "http://www.w3.org/2000/svg",
+        "path"
+      );
+      path.setAttribute("stroke-linecap", "round");
+      path.setAttribute("stroke-linejoin", "round");
+      path.setAttribute("d", "M12 4.5v15m7.5-7.5h-15");
+
+      svg.appendChild(path);
+      newTodo.prepend(svg);
+
+      // build text for button
+      const textNewTodo = buildHtml("textNewTodo", "p", newTodo);
+      textNewTodo.textContent = "Add Task";
+
+      // ** EXTRA BUILD ** //
+      // run modal build and append event to button arg //
+      // eslint-disable-next-line no-use-before-define
+      buildModal(newTodo);
+    }
   };
 
   // func to build box (text + buttons)
-  const todoComplete = (text, parent, index, section) => {
-    const newBox = buildHtml("todoBox", "div", parent);
+  const todoComplete = (flexSection, text, index, section) => {
+    // OLD CODE NEEDS REWORK //
+    const newBox = buildHtml("todoBox", "div", flexSection);
     const newEl = buildHtml("todoEl", "div", newBox);
     newEl.textContent = text;
     newEl.setAttribute("data-index", index);
     newEl.setAttribute("section", section);
     const newOption = buildHtml("todoOption", "div", newBox);
+    // OLD CODE NEEDS REWORK //
 
     // Svg size
     const svgSize = "20";
@@ -127,7 +137,9 @@ const todo = (() => {
     completePath.setAttribute("d", "M4.5 12.75l6 6 9-13.5");
 
     svgComplete.appendChild(completePath);
-    newOption.appendChild(svgComplete);
+    if (section !== "done") {
+      newOption.appendChild(svgComplete);
+    }
 
     // svg edit
     const svgEdit = document.createElementNS(
@@ -180,8 +192,12 @@ const todo = (() => {
       "d",
       "M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
     );
+
     svgDelete.appendChild(deletePath);
     newOption.append(svgDelete);
+
+    // eslint-disable-next-line no-use-before-define
+    deleteModal();
 
     // *** event listeners ***
 
@@ -506,28 +522,32 @@ const todo = (() => {
 
   // func to update ui
   const updateUi = (data = todoLogic.getData()) => {
-    // select the parent
-    const parent = document.getElementById("todoParent");
-    const doneParent = document.getElementById("doneParent");
+    //
+    const parent = document.getElementById("todoGrid");
 
     // remove every todo
     while (parent.firstChild) {
       parent.removeChild(parent.firstChild);
     }
 
-    while (doneParent.firstChild) {
-      doneParent.removeChild(doneParent.firstChild);
+    // build all from DB
+    // eslint-disable-next-line no-restricted-syntax, guard-for-in
+    for (const key in data) {
+      const project = data[key];
+      // eslint-disable-next-line no-restricted-syntax, guard-for-in
+      for (const section in project) {
+        buildSection(section);
+        const array = project[section];
+        // eslint-disable-next-line no-restricted-syntax, guard-for-in
+        for (const task in array) {
+          const flexSection = document.getElementById(`${section}Parent`);
+          const { title } = array[task];
+          const index = task;
+          const Attsection = `${section}`;
+          todoComplete(flexSection, title, index, Attsection);
+        }
+      }
     }
-
-    // build all the todos in DB
-    data.projects.todo.forEach((e) => {
-      todoComplete(e.title, parent, data.projects.todo.indexOf(e));
-    });
-
-    // // build all the done's
-    data.projects.done.forEach((e) => {
-      todoComplete(e.title, doneParent, data.projects.done.indexOf(e));
-    });
   };
 
   // func to delete ui

@@ -2,7 +2,20 @@
 const todoLogic = (() => {
   //
   const saveTodo = {
-    projects: { todo: [], done: [] },
+    projects: {
+      todo: [
+        {
+          title: "Car",
+          date: "",
+          priority: {
+            high: false,
+            med: false,
+            low: false,
+          },
+        },
+      ],
+      done: [],
+    },
   };
 
   // create and add todo to DB
