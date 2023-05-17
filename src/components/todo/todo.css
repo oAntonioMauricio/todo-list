@@ -172,4 +172,8 @@
     overflow: auto;
     grid-auto-flow: row;
   }
+
+  .modalSection {
+    width: auto;
+  }
 }
