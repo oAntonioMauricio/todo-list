@@ -95,7 +95,6 @@ const todo = (() => {
       textNewTodo.textContent = "Add Task";
 
       // ** EXTRA BUILD ** //
-      // run modal build and append event to button arg //
       // eslint-disable-next-line no-use-before-define
       buildModal(newTodo);
     }
@@ -227,7 +226,11 @@ const todo = (() => {
     newOption.append(svgDelete);
 
     // eslint-disable-next-line no-use-before-define
-    deleteModal();
+    const isDeleteBuilt = document.getElementById("deleteSection");
+    if (!isDeleteBuilt) {
+      // eslint-disable-next-line no-use-before-define
+      deleteModal();
+    }
 
     // *** event listeners ***
 
@@ -275,6 +278,9 @@ const todo = (() => {
       // eslint-disable-next-line no-console
       console.log("Delete element clicked!");
 
+      // cancel background touch
+      e.stopPropagation();
+
       // overlay
       const modalOverlay = document.getElementById("deleteOverlay");
       modalOverlay.classList.toggle("hidden");
@@ -306,6 +312,7 @@ const todo = (() => {
     // build section for modal
     const modalSection = buildHtml("modalSection", "section", container);
     modalSection.classList.add("hidden");
+    modalSection.setAttribute("id", "modalSection");
 
     // build div(overlay) for modal
     const modalOverlay = buildHtml("modalOverlay", "div", container);
@@ -439,21 +446,27 @@ const todo = (() => {
     // **** Event Listeners **** //
 
     // toggle modal on newTodo button
-    button.addEventListener("click", () => {
+    button.addEventListener("click", (e) => {
+      // cancel background touch
+      e.stopPropagation();
       modalSection.classList.toggle("hidden");
       modalOverlay.classList.toggle("hidden");
       titleInput.focus();
     });
 
     // toggle modal on overlay
-    modalOverlay.addEventListener("click", () => {
+    modalOverlay.addEventListener("click", (e) => {
+      // cancel background touch
+      e.stopPropagation();
       modalSection.classList.add("hidden");
       modalOverlay.classList.add("hidden");
       todoForm.reset();
     });
 
     // toggle modal on close button
-    closeDiv.addEventListener("click", () => {
+    closeDiv.addEventListener("click", (e) => {
+      // cancel background touch
+      e.stopPropagation();
       modalSection.classList.toggle("hidden");
       modalOverlay.classList.toggle("hidden");
       todoForm.reset();
@@ -462,6 +475,8 @@ const todo = (() => {
     // submit form
     todoForm.addEventListener("submit", (event) => {
       event.preventDefault();
+      // cancel background touch
+      event.stopPropagation();
       // eslint-disable-next-line no-console
       console.log("sending to logic...");
       const title = titleInput.value;
@@ -602,9 +617,18 @@ const todo = (() => {
         }
       }
     }
-  };
 
-  // func to delete ui
+    // HOT FIX FOR MULTIPLE MODAL // LETS UPDATES THIS LATER
+    const elements = document.querySelectorAll("#modalSection");
+
+    if (elements.length > 1) {
+      // There are multiple elements with the same ID
+      const modalOne = document.getElementById("modalSection");
+      modalOne.remove();
+      const modalTwo = document.getElementById("modalOverlay");
+      modalTwo.remove();
+    }
+  };
 
   return { build, updateUi };
 })();
