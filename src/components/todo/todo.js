@@ -5,7 +5,6 @@ import todoLogic from "../../appLogic/todoLogic";
 
 const todo = (() => {
   //
-
   // func to build html
   const buildHtml = (className, element, parent, text) => {
     const newEl = document.createElement(element);
@@ -45,265 +44,18 @@ const todo = (() => {
     const doneEl = buildHtml("todoEl", "div", doneBox);
     doneEl.textContent = "This task is done!";
 
+    // ** EXTRA BUILD ** //
+    // eslint-disable-next-line no-use-before-define
+    buildModal();
+    // eslint-disable-next-line no-use-before-define
+    deleteModal();
+
     // eslint-disable-next-line no-use-before-define
     updateUi();
   };
 
-  // func to build sections (name of the category: todo, done, etc..)
-  const buildSection = (h4) => {
-    const todoGrid = document.getElementById("todoGrid");
-
-    // build todo tab
-    const todoTab = buildHtml("todoTab", "div", todoGrid);
-
-    // build h3 for todo tab
-    const todoH4 = buildHtml("todoH4", "h4", todoTab);
-    todoH4.textContent = h4;
-
-    // build flex for todo cards
-    const todoFlex = buildHtml("todoFlex", "div", todoTab);
-    todoFlex.setAttribute("id", `${h4}Parent`);
-
-    if (h4 !== "done") {
-      // build newTodo button
-      const newTodo = buildHtml("newTodo", "button", todoTab);
-
-      // build svg icon on the button
-      const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-      svg.setAttribute("xmlns", "http://www.w3.org/2000/svg");
-      svg.setAttribute("fill", "none");
-      svg.setAttribute("viewBox", "0 0 24 24");
-      svg.setAttribute("stroke-width", "1.5");
-      svg.setAttribute("stroke", "currentColor");
-      svg.setAttribute("class", "svgNewTodo");
-      svg.setAttribute("width", "20"); // set width to 20px
-      svg.setAttribute("height", "20"); // set height to 20px
-
-      const path = document.createElementNS(
-        "http://www.w3.org/2000/svg",
-        "path"
-      );
-      path.setAttribute("stroke-linecap", "round");
-      path.setAttribute("stroke-linejoin", "round");
-      path.setAttribute("d", "M12 4.5v15m7.5-7.5h-15");
-
-      svg.appendChild(path);
-      newTodo.prepend(svg);
-
-      // build text for button
-      const textNewTodo = buildHtml("textNewTodo", "p", newTodo);
-      textNewTodo.textContent = "Add Task";
-
-      // ** EXTRA BUILD ** //
-      // eslint-disable-next-line no-use-before-define
-      buildModal(newTodo);
-    }
-  };
-
-  // func to build box (text + buttons)
-  const todoComplete = (flexSection, text, index, section) => {
-    // OLD CODE NEEDS REWORK //
-    const newBox = buildHtml("todoBox", "div", flexSection);
-    const newEl = buildHtml("todoEl", "div", newBox);
-    newEl.textContent = text;
-    newEl.setAttribute("data-index", index);
-    newEl.setAttribute("section", section);
-    const newOption = buildHtml("todoOption", "div", newBox);
-    // OLD CODE NEEDS REWORK //
-
-    // Svg size
-    const svgSize = "20";
-
-    // svg complete
-    const svgComplete = document.createElementNS(
-      "http://www.w3.org/2000/svg",
-      "svg"
-    );
-    svgComplete.setAttribute("xmlns", "http://www.w3.org/2000/svg");
-    svgComplete.setAttribute("fill", "none");
-    svgComplete.setAttribute("viewBox", "0 0 24 24");
-    svgComplete.setAttribute("stroke-width", "1.5");
-    svgComplete.setAttribute("stroke", "currentColor");
-    svgComplete.setAttribute("width", svgSize);
-    svgComplete.setAttribute("height", svgSize);
-
-    const completePath = document.createElementNS(
-      "http://www.w3.org/2000/svg",
-      "path"
-    );
-    completePath.setAttribute("stroke-linecap", "round");
-    completePath.setAttribute("stroke-linejoin", "round");
-    completePath.setAttribute("d", "M4.5 12.75l6 6 9-13.5");
-
-    svgComplete.appendChild(completePath);
-
-    // ** Do not render on the done section **
-    if (section !== "done") {
-      newOption.appendChild(svgComplete);
-    }
-
-    // svg undo
-    const undoSvg = document.createElementNS(
-      "http://www.w3.org/2000/svg",
-      "svg"
-    );
-    undoSvg.setAttribute("xmlns", "http://www.w3.org/2000/svg");
-    undoSvg.setAttribute("fill", "none");
-    undoSvg.setAttribute("viewBox", "0 0 24 24");
-    undoSvg.setAttribute("stroke-width", "1.5");
-    undoSvg.setAttribute("stroke", "currentColor");
-    undoSvg.setAttribute("width", svgSize);
-    undoSvg.setAttribute("height", svgSize);
-
-    const undoPath = document.createElementNS(
-      "http://www.w3.org/2000/svg",
-      "path"
-    );
-    undoPath.setAttribute("stroke-linecap", "round");
-    undoPath.setAttribute("stroke-linejoin", "round");
-    undoPath.setAttribute("d", "M9 15L3 9m0 0l6-6M3 9h12a6 6 0 010 12h-3");
-
-    undoSvg.appendChild(undoPath);
-
-    // ** render only on the done section
-    if (section === "done") {
-      newOption.appendChild(undoSvg);
-    }
-
-    // svg edit
-    const svgEdit = document.createElementNS(
-      "http://www.w3.org/2000/svg",
-      "svg"
-    );
-    svgEdit.setAttribute("xmlns", "http://www.w3.org/2000/svg");
-    svgEdit.setAttribute("fill", "none");
-    svgEdit.setAttribute("viewBox", "0 0 24 24");
-    svgEdit.setAttribute("stroke-width", "1.5");
-    svgEdit.setAttribute("stroke", "currentColor");
-    svgEdit.setAttribute("width", svgSize);
-    svgEdit.setAttribute("height", svgSize);
-
-    const editPath = document.createElementNS(
-      "http://www.w3.org/2000/svg",
-      "path"
-    );
-    editPath.setAttribute("stroke-linecap", "round");
-    editPath.setAttribute("stroke-linejoin", "round");
-    editPath.setAttribute(
-      "d",
-      "M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"
-    );
-
-    svgEdit.appendChild(editPath);
-    newOption.appendChild(svgEdit);
-
-    // svg delete
-    const svgDelete = document.createElementNS(
-      "http://www.w3.org/2000/svg",
-      "svg"
-    );
-    svgDelete.setAttribute("xmlns", "http://www.w3.org/2000/svg");
-    svgDelete.setAttribute("fill", "none");
-    svgDelete.setAttribute("viewBox", "0 0 24 24");
-    svgDelete.setAttribute("stroke-width", "1.5");
-    svgDelete.setAttribute("stroke", "currentColor");
-    svgDelete.setAttribute("width", svgSize);
-    svgDelete.setAttribute("height", svgSize);
-    svgDelete.setAttribute("id", "svgDelete");
-
-    const deletePath = document.createElementNS(
-      "http://www.w3.org/2000/svg",
-      "path"
-    );
-    deletePath.setAttribute("stroke-linecap", "round");
-    deletePath.setAttribute("stroke-linejoin", "round");
-    deletePath.setAttribute(
-      "d",
-      "M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
-    );
-
-    svgDelete.appendChild(deletePath);
-    newOption.append(svgDelete);
-
-    // eslint-disable-next-line no-use-before-define
-    const isDeleteBuilt = document.getElementById("deleteSection");
-    if (!isDeleteBuilt) {
-      // eslint-disable-next-line no-use-before-define
-      deleteModal();
-    }
-
-    // *** event listeners ***
-
-    // task done icon
-    svgComplete.addEventListener("click", (e) => {
-      // eslint-disable-next-line no-console
-      console.log("task done... sending to db");
-      const project = document
-        .getElementById("projectTitle")
-        .textContent.toLowerCase();
-      const from = "todo";
-      const moveIndex =
-        e.target.parentNode.parentNode.firstChild.getAttribute("data-index");
-      const to = "done";
-      todoLogic.moveTodo(project, from, moveIndex, to);
-      // update the whole ui
-      // eslint-disable-next-line no-use-before-define
-      updateUi();
-    });
-
-    // undo task icon
-    undoSvg.addEventListener("click", (e) => {
-      console.log("reverting task to todo...");
-      const project = document
-        .getElementById("projectTitle")
-        .textContent.toLowerCase();
-      const from = "done";
-      const moveIndex =
-        e.target.parentNode.parentNode.firstChild.getAttribute("data-index");
-      const to = "todo";
-      todoLogic.moveTodo(project, from, moveIndex, to);
-      // update the whole ui
-      // eslint-disable-next-line no-use-before-define
-      updateUi();
-    });
-
-    // modify todo icon
-    svgEdit.addEventListener("click", () => {
-      alert("Under maintenance. Sorry for the inconvenience.");
-    });
-
-    // delete/thrash icon
-    svgDelete.addEventListener("click", (e) => {
-      //
-      // eslint-disable-next-line no-console
-      console.log("Delete element clicked!");
-
-      // cancel background touch
-      e.stopPropagation();
-
-      // overlay
-      const modalOverlay = document.getElementById("deleteOverlay");
-      modalOverlay.classList.toggle("hidden");
-
-      // modal
-      const deleteModal = document.getElementById("deleteSection");
-      deleteModal.classList.toggle("hidden");
-
-      // Delete text
-      const textDisplay = document.getElementById("deleteText");
-      const deleteText = e.target.parentNode.previousElementSibling.textContent;
-      textDisplay.textContent = deleteText;
-      const indexDisplay =
-        e.target.parentNode.previousElementSibling.getAttribute("data-index");
-      textDisplay.setAttribute("data-index", indexDisplay);
-      const sectionDisplay =
-        e.target.parentNode.previousElementSibling.getAttribute("section");
-      textDisplay.setAttribute("section", sectionDisplay);
-    });
-  };
-
   // func to build the add new modal
-  const buildModal = (button) => {
+  const buildModal = () => {
     // eslint-disable-next-line no-console
     console.log("modal ONLINE");
 
@@ -445,15 +197,6 @@ const todo = (() => {
 
     // **** Event Listeners **** //
 
-    // toggle modal on newTodo button
-    button.addEventListener("click", (e) => {
-      // cancel background touch
-      e.stopPropagation();
-      modalSection.classList.toggle("hidden");
-      modalOverlay.classList.toggle("hidden");
-      titleInput.focus();
-    });
-
     // toggle modal on overlay
     modalOverlay.addEventListener("click", (e) => {
       // cancel background touch
@@ -589,6 +332,260 @@ const todo = (() => {
     });
   };
 
+  // func to build sections (name of the category: todo, done, etc..)
+  const buildSection = (h4) => {
+    const todoGrid = document.getElementById("todoGrid");
+
+    // build todo tab
+    const todoTab = buildHtml("todoTab", "div", todoGrid);
+
+    // build h3 for todo tab
+    const todoH4 = buildHtml("todoH4", "h4", todoTab);
+    todoH4.textContent = h4;
+
+    // build flex for todo cards
+    const todoFlex = buildHtml("todoFlex", "div", todoTab);
+    todoFlex.setAttribute("id", `${h4}Parent`);
+
+    if (h4 !== "done") {
+      // build newTodo button
+      const newTodo = buildHtml("newTodo", "button", todoTab);
+
+      // build svg icon on the button
+      const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+      svg.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+      svg.setAttribute("fill", "none");
+      svg.setAttribute("viewBox", "0 0 24 24");
+      svg.setAttribute("stroke-width", "1.5");
+      svg.setAttribute("stroke", "currentColor");
+      svg.setAttribute("class", "svgNewTodo");
+      svg.setAttribute("width", "20"); // set width to 20px
+      svg.setAttribute("height", "20"); // set height to 20px
+
+      const path = document.createElementNS(
+        "http://www.w3.org/2000/svg",
+        "path"
+      );
+      path.setAttribute("stroke-linecap", "round");
+      path.setAttribute("stroke-linejoin", "round");
+      path.setAttribute("d", "M12 4.5v15m7.5-7.5h-15");
+
+      svg.appendChild(path);
+      newTodo.prepend(svg);
+
+      // build text for button
+      const textNewTodo = buildHtml("textNewTodo", "p", newTodo);
+      textNewTodo.textContent = "Add Task";
+
+      // select dom nodes
+      const modalSection = document.getElementById("modalSection");
+      const modalOverlay = document.getElementById("modalOverlay");
+      const titleInput = document.getElementById("title");
+      // New code here
+      newTodo.addEventListener("click", (e) => {
+        e.stopPropagation();
+        modalSection.classList.toggle("hidden");
+        modalOverlay.classList.toggle("hidden");
+        titleInput.focus();
+      });
+    }
+  };
+
+  // func to build box (text + buttons)
+  const todoComplete = (flexSection, text, index, section) => {
+    // OLD CODE NEEDS REWORK //
+    const newBox = buildHtml("todoBox", "div", flexSection);
+    const newEl = buildHtml("todoEl", "div", newBox);
+    newEl.textContent = text;
+    newEl.setAttribute("data-index", index);
+    newEl.setAttribute("section", section);
+    const newOption = buildHtml("todoOption", "div", newBox);
+    // OLD CODE NEEDS REWORK //
+
+    // Svg size
+    const svgSize = "20";
+
+    // svg complete
+    const svgComplete = document.createElementNS(
+      "http://www.w3.org/2000/svg",
+      "svg"
+    );
+    svgComplete.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+    svgComplete.setAttribute("fill", "none");
+    svgComplete.setAttribute("viewBox", "0 0 24 24");
+    svgComplete.setAttribute("stroke-width", "1.5");
+    svgComplete.setAttribute("stroke", "currentColor");
+    svgComplete.setAttribute("width", svgSize);
+    svgComplete.setAttribute("height", svgSize);
+
+    const completePath = document.createElementNS(
+      "http://www.w3.org/2000/svg",
+      "path"
+    );
+    completePath.setAttribute("stroke-linecap", "round");
+    completePath.setAttribute("stroke-linejoin", "round");
+    completePath.setAttribute("d", "M4.5 12.75l6 6 9-13.5");
+
+    svgComplete.appendChild(completePath);
+
+    // ** Do not render on the done section **
+    if (section !== "done") {
+      newOption.appendChild(svgComplete);
+    }
+
+    // svg undo
+    const undoSvg = document.createElementNS(
+      "http://www.w3.org/2000/svg",
+      "svg"
+    );
+    undoSvg.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+    undoSvg.setAttribute("fill", "none");
+    undoSvg.setAttribute("viewBox", "0 0 24 24");
+    undoSvg.setAttribute("stroke-width", "1.5");
+    undoSvg.setAttribute("stroke", "currentColor");
+    undoSvg.setAttribute("width", svgSize);
+    undoSvg.setAttribute("height", svgSize);
+
+    const undoPath = document.createElementNS(
+      "http://www.w3.org/2000/svg",
+      "path"
+    );
+    undoPath.setAttribute("stroke-linecap", "round");
+    undoPath.setAttribute("stroke-linejoin", "round");
+    undoPath.setAttribute("d", "M9 15L3 9m0 0l6-6M3 9h12a6 6 0 010 12h-3");
+
+    undoSvg.appendChild(undoPath);
+
+    // ** render only on the done section
+    if (section === "done") {
+      newOption.appendChild(undoSvg);
+    }
+
+    // svg edit
+    const svgEdit = document.createElementNS(
+      "http://www.w3.org/2000/svg",
+      "svg"
+    );
+    svgEdit.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+    svgEdit.setAttribute("fill", "none");
+    svgEdit.setAttribute("viewBox", "0 0 24 24");
+    svgEdit.setAttribute("stroke-width", "1.5");
+    svgEdit.setAttribute("stroke", "currentColor");
+    svgEdit.setAttribute("width", svgSize);
+    svgEdit.setAttribute("height", svgSize);
+
+    const editPath = document.createElementNS(
+      "http://www.w3.org/2000/svg",
+      "path"
+    );
+    editPath.setAttribute("stroke-linecap", "round");
+    editPath.setAttribute("stroke-linejoin", "round");
+    editPath.setAttribute(
+      "d",
+      "M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"
+    );
+
+    svgEdit.appendChild(editPath);
+    newOption.appendChild(svgEdit);
+
+    // svg delete
+    const svgDelete = document.createElementNS(
+      "http://www.w3.org/2000/svg",
+      "svg"
+    );
+    svgDelete.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+    svgDelete.setAttribute("fill", "none");
+    svgDelete.setAttribute("viewBox", "0 0 24 24");
+    svgDelete.setAttribute("stroke-width", "1.5");
+    svgDelete.setAttribute("stroke", "currentColor");
+    svgDelete.setAttribute("width", svgSize);
+    svgDelete.setAttribute("height", svgSize);
+    svgDelete.setAttribute("id", "svgDelete");
+
+    const deletePath = document.createElementNS(
+      "http://www.w3.org/2000/svg",
+      "path"
+    );
+    deletePath.setAttribute("stroke-linecap", "round");
+    deletePath.setAttribute("stroke-linejoin", "round");
+    deletePath.setAttribute(
+      "d",
+      "M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
+    );
+
+    svgDelete.appendChild(deletePath);
+    newOption.append(svgDelete);
+
+    // *** event listeners ***
+
+    // task done icon
+    svgComplete.addEventListener("click", (e) => {
+      // eslint-disable-next-line no-console
+      console.log("task done... sending to db");
+      const project = document
+        .getElementById("projectTitle")
+        .textContent.toLowerCase();
+      const from = "todo";
+      const moveIndex =
+        e.target.parentNode.parentNode.firstChild.getAttribute("data-index");
+      const to = "done";
+      todoLogic.moveTodo(project, from, moveIndex, to);
+      // update the whole ui
+      // eslint-disable-next-line no-use-before-define
+      updateUi();
+    });
+
+    // undo task icon
+    undoSvg.addEventListener("click", (e) => {
+      console.log("reverting task to todo...");
+      const project = document
+        .getElementById("projectTitle")
+        .textContent.toLowerCase();
+      const from = "done";
+      const moveIndex =
+        e.target.parentNode.parentNode.firstChild.getAttribute("data-index");
+      const to = "todo";
+      todoLogic.moveTodo(project, from, moveIndex, to);
+      // update the whole ui
+      // eslint-disable-next-line no-use-before-define
+      updateUi();
+    });
+
+    // modify todo icon
+    svgEdit.addEventListener("click", () => {
+      alert("Under maintenance. Sorry for the inconvenience.");
+    });
+
+    // delete/thrash icon
+    svgDelete.addEventListener("click", (e) => {
+      //
+      // eslint-disable-next-line no-console
+      console.log("Delete element clicked!");
+
+      // cancel background touch
+      e.stopPropagation();
+
+      // overlay
+      const modalOverlay = document.getElementById("deleteOverlay");
+      modalOverlay.classList.toggle("hidden");
+
+      // modal
+      const deleteModal = document.getElementById("deleteSection");
+      deleteModal.classList.toggle("hidden");
+
+      // Delete text
+      const textDisplay = document.getElementById("deleteText");
+      const deleteText = e.target.parentNode.previousElementSibling.textContent;
+      textDisplay.textContent = deleteText;
+      const indexDisplay =
+        e.target.parentNode.previousElementSibling.getAttribute("data-index");
+      textDisplay.setAttribute("data-index", indexDisplay);
+      const sectionDisplay =
+        e.target.parentNode.previousElementSibling.getAttribute("section");
+      textDisplay.setAttribute("section", sectionDisplay);
+    });
+  };
+
   // func to update ui
   const updateUi = (data = todoLogic.getData()) => {
     //
@@ -617,20 +614,9 @@ const todo = (() => {
         }
       }
     }
-
-    // HOT FIX FOR MULTIPLE MODAL // LETS UPDATES THIS LATER
-    const elements = document.querySelectorAll("#modalSection");
-
-    if (elements.length > 1) {
-      // There are multiple elements with the same ID
-      const modalOne = document.getElementById("modalSection");
-      modalOne.remove();
-      const modalTwo = document.getElementById("modalOverlay");
-      modalTwo.remove();
-    }
   };
 
-  return { build, updateUi };
+  return { build };
 })();
 
 export default todo;
