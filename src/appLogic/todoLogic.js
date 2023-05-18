@@ -38,6 +38,7 @@ const todoLogic = (() => {
     console.log("moving todo to a differente category");
     const todoMoving = saveTodo[project][from].splice(index, 1)[0];
     saveTodo[project][to].push(todoMoving);
+    // eslint-disable-next-line no-console
     console.log(saveTodo);
   };
 

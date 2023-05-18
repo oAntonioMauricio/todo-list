@@ -122,6 +122,7 @@ const todo = (() => {
     titleInput.type = "text";
     titleInput.id = "title";
     titleInput.name = "title";
+    titleInput.required = true;
 
     // build div for dueDate
     const dateDiv = buildHtml("formDiv", "div", todoForm);
@@ -323,6 +324,7 @@ const todo = (() => {
       const taskToDelete = document.getElementById("deleteText");
       const index = taskToDelete.getAttribute("data-index");
       const section = taskToDelete.getAttribute("section");
+      // eslint-disable-next-line no-console
       console.log(section);
       todoLogic.deleteTodo(section, index);
       // eslint-disable-next-line no-use-before-define
@@ -393,14 +395,25 @@ const todo = (() => {
 
   // func to build box (text + buttons)
   const todoComplete = (flexSection, text, index, section) => {
-    // OLD CODE NEEDS REWORK //
+    //
+    // build div for task + buttons
     const newBox = buildHtml("todoBox", "div", flexSection);
+
+    // build div for text and date
     const newEl = buildHtml("todoEl", "div", newBox);
-    newEl.textContent = text;
     newEl.setAttribute("data-index", index);
     newEl.setAttribute("section", section);
+
+    // build p for task
+    const newTask = buildHtml("newTask", "p", newEl);
+    newTask.innerText = text;
+
+    // build p for date
+    const newDate = buildHtml("newDate", "p", newEl);
+    newDate.textContent = "Apr 23";
+
+    // build div for buttons
     const newOption = buildHtml("todoOption", "div", newBox);
-    // OLD CODE NEEDS REWORK //
 
     // Svg size
     const svgSize = "20";
@@ -537,6 +550,7 @@ const todo = (() => {
 
     // undo task icon
     undoSvg.addEventListener("click", (e) => {
+      // eslint-disable-next-line no-console
       console.log("reverting task to todo...");
       const project = document
         .getElementById("projectTitle")
@@ -553,6 +567,7 @@ const todo = (() => {
 
     // modify todo icon
     svgEdit.addEventListener("click", () => {
+      // eslint-disable-next-line no-alert
       alert("Under maintenance. Sorry for the inconvenience.");
     });
 
@@ -570,13 +585,14 @@ const todo = (() => {
       modalOverlay.classList.toggle("hidden");
 
       // modal
-      const deleteModal = document.getElementById("deleteSection");
-      deleteModal.classList.toggle("hidden");
+      const deleteSection = document.getElementById("deleteSection");
+      deleteSection.classList.toggle("hidden");
 
       // Delete text
       const textDisplay = document.getElementById("deleteText");
-      const deleteText = e.target.parentNode.previousElementSibling.textContent;
-      textDisplay.textContent = deleteText;
+      const deleteText =
+        e.target.parentNode.previousElementSibling.firstChild.innerText;
+      textDisplay.innerText = deleteText;
       const indexDisplay =
         e.target.parentNode.previousElementSibling.getAttribute("data-index");
       textDisplay.setAttribute("data-index", indexDisplay);
