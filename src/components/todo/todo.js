@@ -394,7 +394,7 @@ const todo = (() => {
   };
 
   // func to build box (text + buttons)
-  const todoComplete = (flexSection, text, index, section) => {
+  const todoComplete = (flexSection, text, date, index, section) => {
     //
     // build div for task + buttons
     const newBox = buildHtml("todoBox", "div", flexSection);
@@ -408,9 +408,11 @@ const todo = (() => {
     const newTask = buildHtml("newTask", "p", newEl);
     newTask.innerText = text;
 
-    // build p for date
-    const newDate = buildHtml("newDate", "p", newEl);
-    newDate.textContent = "Apr 23";
+    if (date) {
+      // build p for date
+      const newDate = buildHtml("newDate", "p", newEl);
+      newDate.innerText = date;
+    }
 
     // build div for buttons
     const newOption = buildHtml("todoOption", "div", newBox);
@@ -624,9 +626,15 @@ const todo = (() => {
         for (const task in array) {
           const flexSection = document.getElementById(`${section}Parent`);
           const { title } = array[task];
+          const { date } = array[task];
+          if (date) {
+            // format date in here //
+            // format date in here //
+            // format date in here //
+          }
           const index = task;
           const Attsection = `${section}`;
-          todoComplete(flexSection, title, index, Attsection);
+          todoComplete(flexSection, title, date, index, Attsection);
         }
       }
     }
