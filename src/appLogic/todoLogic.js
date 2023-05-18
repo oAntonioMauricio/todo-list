@@ -6,7 +6,7 @@ const todoLogic = (() => {
       todo: [
         {
           title: "Your first task!",
-          date: "Apr 12th",
+          date: "2023-05-20",
           priority: {
             high: false,
             med: false,

@@ -1,4 +1,5 @@
 import "./todo.css";
+import { parseISO, format } from "date-fns";
 import todoLogic from "../../appLogic/todoLogic";
 
 // build the to do section
@@ -678,11 +679,11 @@ const todo = (() => {
         for (const task in array) {
           const flexSection = document.getElementById(`${section}Parent`);
           const { title } = array[task];
-          const { date } = array[task];
+          let { date } = array[task];
           if (date) {
-            // format date in here //
-            // format date in here //
-            // format date in here //
+            // format date
+            const inputDate = parseISO(date);
+            date = format(inputDate, "MMMM do");
           }
           const { priority } = array[task];
           const index = task;
