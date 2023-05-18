@@ -6,11 +6,11 @@ const todoLogic = (() => {
       todo: [
         {
           title: "Your first task!",
-          date: "",
+          date: "Apr 12th",
           priority: {
             high: false,
             med: false,
-            low: false,
+            low: true,
           },
         },
       ],

@@ -54,6 +54,13 @@
   margin: 0;
 }
 
+.divDatePrior {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  gap: 0.5rem;
+}
+
 .newDate {
   color: #8a8a8a;
 }

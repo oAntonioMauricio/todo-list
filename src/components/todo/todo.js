@@ -394,7 +394,7 @@ const todo = (() => {
   };
 
   // func to build box (text + buttons)
-  const todoComplete = (flexSection, text, date, index, section) => {
+  const todoComplete = (flexSection, text, date, priority, index, section) => {
     //
     // build div for task + buttons
     const newBox = buildHtml("todoBox", "div", flexSection);
@@ -408,10 +408,62 @@ const todo = (() => {
     const newTask = buildHtml("newTask", "p", newEl);
     newTask.innerText = text;
 
-    if (date) {
-      // build p for date
-      const newDate = buildHtml("newDate", "p", newEl);
-      newDate.innerText = date;
+    if (date || priority) {
+      // build div for date || prior
+      const divDatePrior = buildHtml("divDatePrior", "div", newEl);
+
+      // build icons for priority
+      const newPrior = (color) => {
+        const priorSvg = document.createElementNS(
+          "http://www.w3.org/2000/svg",
+          "svg"
+        );
+        priorSvg.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+        priorSvg.setAttribute("viewBox", "0 0 24 24");
+        priorSvg.setAttribute("fill", color);
+        priorSvg.setAttribute("width", "20");
+        priorSvg.setAttribute("height", "20");
+
+        const priorPath = document.createElementNS(
+          "http://www.w3.org/2000/svg",
+          "path"
+        );
+        priorPath.setAttribute("fill-rule", "evenodd");
+        priorPath.setAttribute(
+          "d",
+          "M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zM12 8.25a.75.75 0 01.75.75v3.75a.75.75 0 01-1.5 0V9a.75.75 0 01.75-.75zm0 8.25a.75.75 0 100-1.5.75.75 0 000 1.5z"
+        );
+        priorPath.setAttribute("clip-rule", "evenodd");
+
+        priorSvg.appendChild(priorPath);
+        divDatePrior.appendChild(priorSvg);
+      };
+
+      // loop through the 3 priority options and render the svg
+      Object.keys(priority).forEach((e) => {
+        if (priority[e]) {
+          switch (e) {
+            case "high":
+              newPrior("#ef4444");
+              break;
+            case "med":
+              newPrior("#eab308");
+              break;
+            case "low":
+              newPrior("#22c55e");
+              break;
+            default:
+              // eslint-disable-next-line no-console
+              console.log(`Unexpected error on svg render`);
+          }
+        }
+      });
+
+      if (date) {
+        // build p for date
+        const newDate = buildHtml("newDate", "p", divDatePrior);
+        newDate.innerText = date;
+      }
     }
 
     // build div for buttons
@@ -632,9 +684,10 @@ const todo = (() => {
             // format date in here //
             // format date in here //
           }
+          const { priority } = array[task];
           const index = task;
           const Attsection = `${section}`;
-          todoComplete(flexSection, title, date, index, Attsection);
+          todoComplete(flexSection, title, date, priority, index, Attsection);
         }
       }
     }
