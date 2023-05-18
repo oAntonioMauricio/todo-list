@@ -396,6 +396,8 @@ const todo = (() => {
 
   // func to build box (text + buttons)
   const todoComplete = (flexSection, text, date, priority, index, section) => {
+    console.log(date);
+    console.log(priority);
     //
     // build div for task + buttons
     const newBox = buildHtml("todoBox", "div", flexSection);
@@ -685,7 +687,15 @@ const todo = (() => {
             const inputDate = parseISO(date);
             date = format(inputDate, "MMMM do");
           }
-          const { priority } = array[task];
+          let { priority } = array[task];
+          // check if it's all false
+          const onlyFalsePrior = Object.values(priority).every(
+            (value) => value === false
+          );
+          if (onlyFalsePrior) {
+            priority = null;
+          }
+          // index
           const index = task;
           const Attsection = `${section}`;
           todoComplete(flexSection, title, date, priority, index, Attsection);
