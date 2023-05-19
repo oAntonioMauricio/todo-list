@@ -19,7 +19,7 @@ const todoLogic = (() => {
     house: {
       todo: [
         {
-          title: "New Project!",
+          title: "Welcome to your new project!",
           date: "2023-05-20",
           priority: {
             high: false,

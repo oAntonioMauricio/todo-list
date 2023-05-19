@@ -244,7 +244,8 @@ const todo = (() => {
         console.log("Sending update to db...");
         const from = titleInput.getAttribute("section");
         const index = titleInput.getAttribute("data-index");
-        todoLogic.updateTodo("projects", from, index, {
+        // eslint-disable-next-line no-use-before-define
+        todoLogic.updateTodo(getProject(), from, index, {
           title,
           date,
           priority,
@@ -643,14 +644,12 @@ const todo = (() => {
     undoSvg.addEventListener("click", (e) => {
       // eslint-disable-next-line no-console
       console.log("reverting task to todo...");
-      const project = document
-        .getElementById("projectTitle")
-        .textContent.toLowerCase();
       const from = "done";
       const moveIndex =
         e.target.parentNode.parentNode.firstChild.getAttribute("data-index");
       const to = "todo";
-      todoLogic.moveTodo(project, from, moveIndex, to);
+      // eslint-disable-next-line no-use-before-define
+      todoLogic.moveTodo(getProject(), from, moveIndex, to);
       // update the whole ui
       // eslint-disable-next-line no-use-before-define
       updateUi();
@@ -683,7 +682,8 @@ const todo = (() => {
       const taskSection = task.getAttribute("section");
       const taskIndex = task.getAttribute("data-index");
       const taskObject = todoLogic.getOneTodo(
-        "projects",
+        // eslint-disable-next-line no-use-before-define
+        getProject(),
         taskSection,
         taskIndex
       );
