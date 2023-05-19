@@ -807,7 +807,7 @@ const todo = (() => {
     }
   };
 
-  return { build };
+  return { build, getProject };
 })();
 
 export default todo;

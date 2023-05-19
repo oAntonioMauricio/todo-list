@@ -1,9 +1,11 @@
 import "./header.css";
+import todo from "../todo/todo";
 
 // build header
 
 const header = (() => {
   const build = () => {
+    // eslint-disable-next-line no-console
     console.log("header ONLINE");
 
     const container = document.getElementById("mainContainer");
@@ -71,7 +73,7 @@ const header = (() => {
     // project title
     const projectTitle = document.createElement("h3");
     projectTitle.classList.add("projectTitle");
-    projectTitle.textContent = "Projects";
+    projectTitle.textContent = todo.getProject();
     projectTitle.setAttribute("id", "projectTitle");
     project.append(projectTitle);
 
