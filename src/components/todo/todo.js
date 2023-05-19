@@ -237,7 +237,8 @@ const todo = (() => {
       // actions after submiting
       // to create a new todo
       if (submitForm.innerText === "Submit") {
-        todoLogic.createTodo({ title, date, priority });
+        // eslint-disable-next-line no-use-before-define
+        todoLogic.createTodo(getProject(), { title, date, priority });
       } else if (submitForm.innerText === "Update") {
         // eslint-disable-next-line no-console
         console.log("Sending update to db...");
@@ -343,7 +344,8 @@ const todo = (() => {
       const section = taskToDelete.getAttribute("section");
       // eslint-disable-next-line no-console
       console.log(section);
-      todoLogic.deleteTodo(section, index);
+      // eslint-disable-next-line no-use-before-define
+      todoLogic.deleteTodo(getProject(), section, index);
       // eslint-disable-next-line no-use-before-define
       updateUi();
       modalSection.classList.toggle("hidden");
@@ -626,14 +628,12 @@ const todo = (() => {
     svgComplete.addEventListener("click", (e) => {
       // eslint-disable-next-line no-console
       console.log("task done... sending to db");
-      const project = document
-        .getElementById("projectTitle")
-        .textContent.toLowerCase();
       const from = "todo";
       const moveIndex =
         e.target.parentNode.parentNode.firstChild.getAttribute("data-index");
       const to = "done";
-      todoLogic.moveTodo(project, from, moveIndex, to);
+      // eslint-disable-next-line no-use-before-define
+      todoLogic.moveTodo(getProject(), from, moveIndex, to);
       // update the whole ui
       // eslint-disable-next-line no-use-before-define
       updateUi();
@@ -751,6 +751,13 @@ const todo = (() => {
     });
   };
 
+  // func to define project
+  // eslint-disable-next-line prefer-const
+  let projectSelect = "house";
+
+  // fun to get project
+  const getProject = () => projectSelect;
+
   // func to update ui
   const updateUi = (data = todoLogic.getData()) => {
     // eslint-disable-next-line no-console
@@ -767,32 +774,34 @@ const todo = (() => {
     // eslint-disable-next-line no-restricted-syntax, guard-for-in
     for (const key in data) {
       const project = data[key];
-      // eslint-disable-next-line no-restricted-syntax, guard-for-in
-      for (const section in project) {
-        buildSection(section);
-        const array = project[section];
+      if (key === getProject()) {
         // eslint-disable-next-line no-restricted-syntax, guard-for-in
-        for (const task in array) {
-          const flexSection = document.getElementById(`${section}Parent`);
-          const { title } = array[task];
-          let { date } = array[task];
-          if (date) {
-            // format date
-            const inputDate = parseISO(date);
-            date = format(inputDate, "MMMM do");
+        for (const section in project) {
+          buildSection(section);
+          const array = project[section];
+          // eslint-disable-next-line no-restricted-syntax, guard-for-in
+          for (const task in array) {
+            const flexSection = document.getElementById(`${section}Parent`);
+            const { title } = array[task];
+            let { date } = array[task];
+            if (date) {
+              // format date
+              const inputDate = parseISO(date);
+              date = format(inputDate, "MMMM do");
+            }
+            let { priority } = array[task];
+            // check if it's all false
+            const onlyFalsePrior = Object.values(priority).every(
+              (value) => value === false
+            );
+            if (onlyFalsePrior) {
+              priority = null;
+            }
+            // index
+            const index = task;
+            const Attsection = `${section}`;
+            todoComplete(flexSection, title, date, priority, index, Attsection);
           }
-          let { priority } = array[task];
-          // check if it's all false
-          const onlyFalsePrior = Object.values(priority).every(
-            (value) => value === false
-          );
-          if (onlyFalsePrior) {
-            priority = null;
-          }
-          // index
-          const index = task;
-          const Attsection = `${section}`;
-          todoComplete(flexSection, title, date, priority, index, Attsection);
         }
       }
     }

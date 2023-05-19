@@ -16,16 +16,30 @@ const todoLogic = (() => {
       ],
       done: [],
     },
+    house: {
+      todo: [
+        {
+          title: "New Project!",
+          date: "2023-05-20",
+          priority: {
+            high: false,
+            med: true,
+            low: false,
+          },
+        },
+      ],
+      done: [],
+    },
   };
 
   // create and add todo to DB
-  const createTodo = (data) => {
+  const createTodo = (project, data) => {
     if (typeof data === "object") {
       // eslint-disable-next-line no-console
       console.log("Running Logic...");
-      saveTodo.projects.todo.push(data);
+      saveTodo[project].todo.push(data);
       // eslint-disable-next-line no-console
-      console.log(saveTodo.projects);
+      console.log(saveTodo);
     } else {
       // eslint-disable-next-line no-console
       console.log("Invalid argument. Please provide an object.");
@@ -57,12 +71,12 @@ const todoLogic = (() => {
   };
 
   // delete task from DB
-  const deleteTodo = (category, index) => {
+  const deleteTodo = (project, category, index) => {
     // eslint-disable-next-line no-console
     console.log("deleting entry from DB...");
-    saveTodo.projects[category].splice(index, 1);
+    saveTodo[project][category].splice(index, 1);
     // eslint-disable-next-line no-console
-    console.log(saveTodo.projects);
+    console.log(saveTodo);
   };
 
   const getOneTodo = (project, from, index) => saveTodo[project][from][index];
