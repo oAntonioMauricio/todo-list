@@ -42,6 +42,20 @@ const todoLogic = (() => {
     console.log(saveTodo);
   };
 
+  // update Todo
+  const updateTodo = (project, from, index, data) => {
+    if (typeof data === "object") {
+      // eslint-disable-next-line no-console
+      console.log("Updating todo in db...");
+      saveTodo[project][from][index] = data;
+      // eslint-disable-next-line no-console
+      console.log(saveTodo);
+    } else {
+      // eslint-disable-next-line no-console
+      console.log("Invalid argument. Please provide an object.");
+    }
+  };
+
   // delete task from DB
   const deleteTodo = (category, index) => {
     // eslint-disable-next-line no-console
@@ -51,9 +65,11 @@ const todoLogic = (() => {
     console.log(saveTodo.projects);
   };
 
+  const getOneTodo = (project, from, index) => saveTodo[project][from][index];
+
   const getData = () => saveTodo;
 
-  return { createTodo, moveTodo, deleteTodo, getData };
+  return { createTodo, moveTodo, updateTodo, deleteTodo, getOneTodo, getData };
 })();
 
 export default todoLogic;

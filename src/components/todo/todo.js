@@ -55,7 +55,7 @@ const todo = (() => {
     updateUi();
   };
 
-  // func to build the add new modal
+  // func to build the add new/update modal
   const buildModal = () => {
     // eslint-disable-next-line no-console
     console.log("modal ONLINE");
@@ -78,6 +78,7 @@ const todo = (() => {
     // build h3
     const modalH3 = buildHtml("todoH4", "h4", modalDiv);
     modalH3.textContent = "Add Task";
+    modalH3.setAttribute("id", "modalH4");
 
     // build close button
     const closeDiv = buildHtml("closeDiv", "button", modalDiv);
@@ -196,6 +197,7 @@ const todo = (() => {
     const submitForm = buildHtml("submitForm", "button", todoForm, "Submit");
     submitForm.setAttribute("form", "todoForm");
     submitForm.setAttribute("type", "submit");
+    submitForm.setAttribute("id", "submitButton");
 
     // **** Event Listeners **** //
 
@@ -233,7 +235,20 @@ const todo = (() => {
       };
 
       // actions after submiting
-      todoLogic.createTodo({ title, date, priority });
+      // to create a new todo
+      if (submitForm.innerText === "Submit") {
+        todoLogic.createTodo({ title, date, priority });
+      } else if (submitForm.innerText === "Update") {
+        console.log("upfating");
+        const from = titleInput.getAttribute("section");
+        const index = titleInput.getAttribute("data-index");
+        todoLogic.updateTodo("projects", from, index, {
+          title,
+          date,
+          priority,
+        });
+      }
+
       // eslint-disable-next-line no-use-before-define
       updateUi();
       modalSection.classList.toggle("hidden");
@@ -384,9 +399,21 @@ const todo = (() => {
       const modalSection = document.getElementById("modalSection");
       const modalOverlay = document.getElementById("modalOverlay");
       const titleInput = document.getElementById("title");
-      // New code here
+
+      // »» event listeners «« //
+      //
       newTodo.addEventListener("click", (e) => {
+        //
         e.stopPropagation();
+        // select submitButton and title
+        const submitButton = document.getElementById("submitButton");
+        const modalTitle = document.getElementById("modalH4");
+
+        // modify submit button for updating
+        submitButton.innerText = "Submit";
+        modalTitle.innerText = "Add Task";
+
+        // open modal
         modalSection.classList.toggle("hidden");
         modalOverlay.classList.toggle("hidden");
         titleInput.focus();
@@ -628,10 +655,67 @@ const todo = (() => {
       updateUi();
     });
 
-    // modify todo icon
-    svgEdit.addEventListener("click", () => {
-      // eslint-disable-next-line no-alert
-      alert("Under maintenance. Sorry for the inconvenience.");
+    // update todo icon
+    svgEdit.addEventListener("click", (e) => {
+      // cancel background touch
+      e.stopPropagation();
+
+      // select modal
+      const modalSection = document.getElementById("modalSection");
+      const modalOverlay = document.getElementById("modalOverlay");
+
+      // select input from, submitButton and modal title
+      const titleInput = document.getElementById("title");
+      const dateInput = document.getElementById("date");
+      const priorHigh = document.getElementById("high");
+      const priorMed = document.getElementById("medium");
+      const priorLow = document.getElementById("low");
+      const submitButton = document.getElementById("submitButton");
+      const modalTitle = document.getElementById("modalH4");
+
+      // modify submit button and title for updating
+      submitButton.innerText = "Update";
+      modalTitle.innerText = "Update Task";
+
+      // get data from this task from the DB
+      const task = e.target.parentNode.previousElementSibling;
+      const taskSection = task.getAttribute("section");
+      const taskIndex = task.getAttribute("data-index");
+      const taskObject = todoLogic.getOneTodo(
+        "projects",
+        taskSection,
+        taskIndex
+      );
+
+      // populate form with the taskObject
+      titleInput.value = taskObject.title;
+      titleInput.setAttribute("section", taskSection);
+      titleInput.setAttribute("data-index", taskIndex);
+      dateInput.value = taskObject.date;
+
+      // populate checkbox's
+      Object.keys(taskObject.priority).forEach((key) => {
+        if (taskObject.priority[key]) {
+          switch (key) {
+            case "high":
+              priorHigh.checked = true;
+              break;
+            case "med":
+              priorMed.checked = true;
+              break;
+            case "low":
+              priorLow.checked = true;
+              break;
+            default:
+              console.log("error while rendering update modal - checkbox");
+          }
+        }
+      });
+
+      // open modal
+      modalSection.classList.toggle("hidden");
+      modalOverlay.classList.toggle("hidden");
+      titleInput.focus();
     });
 
     // delete/thrash icon
@@ -667,6 +751,8 @@ const todo = (() => {
 
   // func to update ui
   const updateUi = (data = todoLogic.getData()) => {
+    // eslint-disable-next-line no-console
+    console.log("reloading ui...");
     //
     const parent = document.getElementById("todoGrid");
 
