@@ -239,7 +239,8 @@ const todo = (() => {
       if (submitForm.innerText === "Submit") {
         todoLogic.createTodo({ title, date, priority });
       } else if (submitForm.innerText === "Update") {
-        console.log("upfating");
+        // eslint-disable-next-line no-console
+        console.log("Sending update to db...");
         const from = titleInput.getAttribute("section");
         const index = titleInput.getAttribute("data-index");
         todoLogic.updateTodo("projects", from, index, {
@@ -707,6 +708,7 @@ const todo = (() => {
               priorLow.checked = true;
               break;
             default:
+              // eslint-disable-next-line no-console
               console.log("error while rendering update modal - checkbox");
           }
         }
