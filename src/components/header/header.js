@@ -79,6 +79,7 @@ const header = (() => {
     // project
     const project = document.createElement("div");
     project.classList.add("project");
+    project.setAttribute("id", "headerProject");
     projectDiv.append(project);
 
     // project title
@@ -112,11 +113,9 @@ const header = (() => {
     projectButton.appendChild(svg);
 
     // menu for titles
+    // built/updated with a loop on todo.js
     const ulTitles = buildHtml("ulTitles", "ul", project);
-    const liTitles = buildHtml("liTitles", "li", ulTitles);
-    liTitles.innerText = "first";
-    const okaypa = buildHtml("liTitles", "li", ulTitles);
-    okaypa.innerText = "second";
+    ulTitles.setAttribute("id", "ulTitle");
 
     // *** event listeners *** //
     project.addEventListener("mouseenter", () => {

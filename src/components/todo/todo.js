@@ -753,7 +753,7 @@ const todo = (() => {
 
   // func to define project
   // eslint-disable-next-line prefer-const
-  let projectSelect = "house";
+  let projectSelect = "projects";
 
   // fun to get project
   const getProject = () => projectSelect;
@@ -769,6 +769,30 @@ const todo = (() => {
     while (parent.firstChild) {
       parent.removeChild(parent.firstChild);
     }
+
+    // update header
+    const titleBuilt = document.getElementById("ulTitle");
+    // update title
+    const projectTitle = document.getElementById("projectTitle");
+    projectTitle.innerText = getProject();
+    // remove every li title
+    while (titleBuilt.firstChild) {
+      titleBuilt.removeChild(titleBuilt.firstChild);
+    }
+
+    // build all the menu items on the header
+    // also builds the event listerner for the li
+    Object.keys(data).forEach((key) => {
+      const liTitle = buildHtml("liTitles", "li", titleBuilt);
+      liTitle.innerText = key;
+      if (key === getProject()) {
+        liTitle.classList.add("activeLi");
+      }
+      liTitle.addEventListener("click", () => {
+        projectSelect = liTitle.innerText.toLowerCase();
+        updateUi();
+      });
+    });
 
     // build all from DB
     // eslint-disable-next-line no-restricted-syntax, guard-for-in
