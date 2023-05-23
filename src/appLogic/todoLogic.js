@@ -79,11 +79,39 @@ const todoLogic = (() => {
     console.log(saveTodo);
   };
 
+  // create a new category
+  const createCategory = (name) => {
+    saveTodo[name] = {
+      todo: [
+        {
+          title: "Welcome to your new project!",
+          date: "2023-05-20",
+          priority: {
+            high: false,
+            med: true,
+            low: false,
+          },
+        },
+      ],
+      done: [],
+    };
+    // eslint-disable-next-line no-console
+    console.log(saveTodo);
+  };
+
   const getOneTodo = (project, from, index) => saveTodo[project][from][index];
 
   const getData = () => saveTodo;
 
-  return { createTodo, moveTodo, updateTodo, deleteTodo, getOneTodo, getData };
+  return {
+    createTodo,
+    moveTodo,
+    updateTodo,
+    deleteTodo,
+    createCategory,
+    getOneTodo,
+    getData,
+  };
 })();
 
 export default todoLogic;

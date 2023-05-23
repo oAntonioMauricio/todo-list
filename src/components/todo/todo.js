@@ -832,7 +832,7 @@ const todo = (() => {
     }
   };
 
-  return { build, getProject };
+  return { build, getProject, updateUi };
 })();
 
 export default todo;

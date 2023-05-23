@@ -1,5 +1,6 @@
 import "./header.css";
 import todo from "../todo/todo";
+import todoLogic from "../../appLogic/todoLogic";
 
 // build header
 
@@ -145,6 +146,9 @@ const header = (() => {
     ulTitles.setAttribute("id", "ulTitle");
 
     // »»» extra build ««« //
+    // build modal
+    // eslint-disable-next-line no-use-before-define
+    newCatModal();
 
     // *** event listeners *** //
     project.addEventListener("mouseenter", () => {
@@ -167,8 +171,23 @@ const header = (() => {
       }
     });
 
-    newCatButton.addEventListener("click", () => {
+    newCatButton.addEventListener("click", (e) => {
+      // eslint-disable-next-line no-console
       console.log("Showming modal to create new project");
+      // cancel background touch
+      e.stopPropagation();
+
+      // overlay
+      const modalOverlay = document.getElementById("newCatOverlay");
+      modalOverlay.classList.toggle("hidden");
+
+      // modal
+      const deleteSection = document.getElementById("newCatSection");
+      deleteSection.classList.toggle("hidden");
+
+      // focus on input
+      const titleInput = document.getElementById("newCatName");
+      titleInput.focus();
     });
   };
 
@@ -178,19 +197,19 @@ const header = (() => {
     // build section for modal
     const modalSection = buildHtml("modalSection", "section", container);
     modalSection.classList.add("hidden");
-    modalSection.setAttribute("id", "deleteSection");
+    modalSection.setAttribute("id", "newCatSection");
 
     // build div(overlay) for modal
     const modalOverlay = buildHtml("modalOverlay", "div", container);
     modalOverlay.classList.add("hidden");
-    modalOverlay.setAttribute("id", "deleteOverlay");
+    modalOverlay.setAttribute("id", "newCatOverlay");
 
     // build div/flex for modal
     const modalDiv = buildHtml("modalDiv", "div", modalSection);
 
     // build h3
     const modalH3 = buildHtml("todoH4", "h4", modalDiv);
-    modalH3.textContent = "Delete The Task?";
+    modalH3.textContent = "Create New Category";
 
     // build close button
     const closeDiv = buildHtml("closeDiv", "button", modalDiv);
@@ -220,18 +239,68 @@ const header = (() => {
     svgClose.appendChild(closePath);
     closeDiv.append(svgClose);
 
-    // Create text from task
-    const todoText = buildHtml("deleteText", "div", modalSection);
-    todoText.textContent = "text here";
-    todoText.setAttribute("id", "deleteText");
+    // build form
+    const todoForm = buildHtml("todoForm", "form", modalSection);
+    todoForm.setAttribute("id", "catForm");
+
+    // build div for title
+    const titleDiv = buildHtml("formDiv", "div", todoForm);
+
+    // build label and input for title
+    // eslint-disable-next-line no-unused-vars
+    const titleLabel = buildHtml("titleLabel", "label", titleDiv, "Name");
+    titleLabel.setAttribute("for", "newCatName");
+    // eslint-disable-next-line no-unused-vars
+    const titleInput = buildHtml("titleInput", "input", titleDiv);
+    titleInput.type = "text";
+    titleInput.id = "newCatName";
+    titleInput.name = "newCatName";
+    titleInput.required = true;
+    titleInput.pattern = "^[^\\s]{1,14}$";
+    titleInput.title = "1 to 14 characters and no spaces.";
 
     // create submit button
-    const confirmDelete = buildHtml(
+    const createNewCatName = buildHtml(
       "submitForm",
       "button",
-      modalSection,
-      "Confirm"
+      todoForm,
+      "Create"
     );
+    createNewCatName.setAttribute("form", "catForm");
+    createNewCatName.setAttribute("type", "submit");
+
+    // *** event listeners ***
+
+    // toggle modal on overlay
+    modalOverlay.addEventListener("click", () => {
+      modalSection.classList.add("hidden");
+      modalOverlay.classList.add("hidden");
+    });
+
+    // toggle modal on close button
+    closeDiv.addEventListener("click", () => {
+      modalSection.classList.toggle("hidden");
+      modalOverlay.classList.toggle("hidden");
+    });
+
+    // submit new category name
+    createNewCatName.addEventListener("click", (event) => {
+      // cancel background touch
+      event.stopPropagation();
+
+      if (todoForm.checkValidity()) {
+        event.preventDefault();
+        // Perform custom error handling or display error messages
+        // eslint-disable-next-line no-console
+        console.log("Sending new category name to DB...");
+        const newCat = titleInput.value.toLowerCase();
+        todoLogic.createCategory(newCat);
+        todo.updateUi();
+        modalSection.classList.toggle("hidden");
+        modalOverlay.classList.toggle("hidden");
+        todoForm.reset();
+      }
+    });
   };
 
   return { build };
