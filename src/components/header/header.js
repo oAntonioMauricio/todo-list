@@ -106,25 +106,132 @@ const header = (() => {
     const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
     path.setAttribute("stroke-linecap", "round");
     path.setAttribute("stroke-linejoin", "round");
-    path.setAttribute("stroke-width", "2");
-    path.setAttribute("d", "M19 9l-7 7-7-7");
+    path.setAttribute("stroke-width", "1.5");
+    path.setAttribute("d", "M8.25 4.5l7.5 7.5-7.5 7.5");
 
     svg.appendChild(path);
     projectButton.appendChild(svg);
 
     // menu for titles
+    // add plus button to add a new category
+    const newCatButton = buildHtml("newCatButton", "button", project);
+    // svg inside on plus button
+    const newCatSvg = document.createElementNS(
+      "http://www.w3.org/2000/svg",
+      "svg"
+    );
+    newCatSvg.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+    newCatSvg.setAttribute("fill", "none");
+    newCatSvg.setAttribute("viewBox", "0 0 24 24");
+    newCatSvg.setAttribute("stroke-width", "1.5");
+    newCatSvg.setAttribute("stroke", "currentColor");
+    newCatSvg.setAttribute("class", "svgNewTodo");
+    newCatSvg.setAttribute("width", "20"); // set width to 20px
+    newCatSvg.setAttribute("height", "20"); // set height to 20px
+
+    const newCatPath = document.createElementNS(
+      "http://www.w3.org/2000/svg",
+      "path"
+    );
+    newCatPath.setAttribute("stroke-linecap", "round");
+    newCatPath.setAttribute("stroke-linejoin", "round");
+    newCatPath.setAttribute("d", "M12 4.5v15m7.5-7.5h-15");
+
+    newCatSvg.appendChild(newCatPath);
+    newCatButton.prepend(newCatSvg);
+
     // built/updated with a loop on todo.js
     const ulTitles = buildHtml("ulTitles", "ul", project);
     ulTitles.setAttribute("id", "ulTitle");
 
+    // »»» extra build ««« //
+
     // *** event listeners *** //
     project.addEventListener("mouseenter", () => {
       ulTitles.classList.add("show");
+      newCatButton.classList.add("show");
     });
 
     project.addEventListener("mouseleave", () => {
       ulTitles.classList.remove("show");
+      newCatButton.classList.remove("show");
     });
+
+    projectButton.addEventListener("click", () => {
+      ulTitles.classList.toggle("alwaysShow");
+      newCatButton.classList.toggle("alwaysShow");
+      if (path.getAttribute("d") === "M8.25 4.5l7.5 7.5-7.5 7.5") {
+        path.setAttribute("d", "M19.5 8.25l-7.5 7.5-7.5-7.5");
+      } else {
+        path.setAttribute("d", "M8.25 4.5l7.5 7.5-7.5 7.5");
+      }
+    });
+
+    newCatButton.addEventListener("click", () => {
+      console.log("Showming modal to create new project");
+    });
+  };
+
+  const newCatModal = () => {
+    const container = document.getElementById("mainContainer");
+
+    // build section for modal
+    const modalSection = buildHtml("modalSection", "section", container);
+    modalSection.classList.add("hidden");
+    modalSection.setAttribute("id", "deleteSection");
+
+    // build div(overlay) for modal
+    const modalOverlay = buildHtml("modalOverlay", "div", container);
+    modalOverlay.classList.add("hidden");
+    modalOverlay.setAttribute("id", "deleteOverlay");
+
+    // build div/flex for modal
+    const modalDiv = buildHtml("modalDiv", "div", modalSection);
+
+    // build h3
+    const modalH3 = buildHtml("todoH4", "h4", modalDiv);
+    modalH3.textContent = "Delete The Task?";
+
+    // build close button
+    const closeDiv = buildHtml("closeDiv", "button", modalDiv);
+
+    // build svg for close button
+    const svgClose = document.createElementNS(
+      "http://www.w3.org/2000/svg",
+      "svg"
+    );
+    svgClose.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+    svgClose.setAttribute("fill", "none");
+    svgClose.setAttribute("viewBox", "0 0 24 24");
+    svgClose.setAttribute("stroke-width", "1.5");
+    svgClose.setAttribute("stroke", "currentColor");
+    svgClose.setAttribute("class", "svgClose");
+    svgClose.setAttribute("width", "20"); // set width to 20px
+    svgClose.setAttribute("height", "20"); // set height to 20px
+
+    const closePath = document.createElementNS(
+      "http://www.w3.org/2000/svg",
+      "path"
+    );
+    closePath.setAttribute("stroke-linecap", "round");
+    closePath.setAttribute("stroke-linejoin", "round");
+    closePath.setAttribute("d", "M6 18L18 6M6 6l12 12");
+
+    svgClose.appendChild(closePath);
+    closeDiv.append(svgClose);
+
+    // Create text from task
+    const todoText = buildHtml("deleteText", "div", modalSection);
+    todoText.textContent = "text here";
+    todoText.setAttribute("id", "deleteText");
+
+    // create submit button
+    const confirmDelete = buildHtml(
+      "submitForm",
+      "button",
+      modalSection,
+      "Confirm"
+    );
   };
 
   return { build };

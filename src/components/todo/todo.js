@@ -771,6 +771,7 @@ const todo = (() => {
     }
 
     // update header
+    // select ul parent
     const titleBuilt = document.getElementById("ulTitle");
     // update title
     const projectTitle = document.getElementById("projectTitle");
