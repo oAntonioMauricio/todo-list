@@ -21,10 +21,12 @@
 
 .project {
   display: flex;
-  justify-content: start;
+  flex-direction: row;
   align-items: center;
-  gap: 12px;
   position: relative;
+  gap: 1rem;
+
+  height: min-content;
 
   background-color: white;
   padding: 1rem 1.5rem;
@@ -33,9 +35,16 @@
     0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 
+.projectFlex {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
 .projectTitle {
   margin: 0;
   text-transform: capitalize;
+  font-size: 20px;
 }
 
 .projectButton {
@@ -53,15 +62,32 @@
 }
 
 .ulTitles {
-  visibility: visible;
-  position: static;
-  top: 30px;
+  display: none;
+  align-items: center;
+  gap: 0.5rem;
+
   background-color: white;
   margin: 0;
+  padding: 0;
+  list-style-type: none;
+}
+
+.liTitles {
+  background-color: #0258ff;
+  color: white;
+  border-radius: 0.5rem;
+  padding: 2px 20px;
+}
+
+.liTitles:hover {
+  cursor: pointer;
+  background-color: #1e40af;
+  color: white;
+  border-color: white;
 }
 
 .show {
-  visibility: visible;
+  display: inline-flex;
 }
 
 .projectButton:hover {
@@ -69,6 +95,6 @@
 }
 
 .svgHeader {
-  width: 1rem;
-  height: 1rem;
+  width: 1.2rem;
+  height: 1.2rem;
 }
