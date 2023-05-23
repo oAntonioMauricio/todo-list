@@ -24,6 +24,7 @@
   justify-content: start;
   align-items: center;
   gap: 12px;
+  position: relative;
 
   background-color: white;
   padding: 1rem 1.5rem;
@@ -49,6 +50,18 @@
   display: inline-flex;
   text-align: center;
   align-items: center;
+}
+
+.ulTitles {
+  visibility: visible;
+  position: static;
+  top: 30px;
+  background-color: white;
+  margin: 0;
+}
+
+.show {
+  visibility: visible;
 }
 
 .projectButton:hover {

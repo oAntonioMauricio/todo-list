@@ -4,6 +4,17 @@ import todo from "../todo/todo";
 // build header
 
 const header = (() => {
+  // func to build html
+  const buildHtml = (className, element, parent, text) => {
+    const newEl = document.createElement(element);
+    if (className) {
+      newEl.classList.add(className);
+    }
+    newEl.textContent = text;
+    parent.append(newEl);
+    return newEl;
+  };
+
   const build = () => {
     // eslint-disable-next-line no-console
     console.log("header ONLINE");
@@ -99,6 +110,22 @@ const header = (() => {
 
     svg.appendChild(path);
     projectButton.appendChild(svg);
+
+    // menu for titles
+    const ulTitles = buildHtml("ulTitles", "ul", project);
+    const liTitles = buildHtml("liTitles", "li", ulTitles);
+    liTitles.innerText = "first";
+    const okaypa = buildHtml("liTitles", "li", ulTitles);
+    okaypa.innerText = "second";
+
+    // *** event listeners *** //
+    project.addEventListener("mouseenter", () => {
+      ulTitles.classList.add("show");
+    });
+
+    project.addEventListener("mouseleave", () => {
+      ulTitles.classList.remove("show");
+    });
   };
 
   return { build };
