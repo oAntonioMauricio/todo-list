@@ -81,6 +81,8 @@ const todoLogic = (() => {
 
   // create a new category
   const createCategory = (name) => {
+    // eslint-disable-next-line no-console
+    console.log("creating new category in db...");
     saveTodo[name] = {
       todo: [
         {
@@ -99,6 +101,14 @@ const todoLogic = (() => {
     console.log(saveTodo);
   };
 
+  const deleteCategory = (name) => {
+    // eslint-disable-next-line no-console
+    console.log("deleting category in db...");
+    delete saveTodo[name];
+    // eslint-disable-next-line no-console
+    console.log(saveTodo);
+  };
+
   const getOneTodo = (project, from, index) => saveTodo[project][from][index];
 
   const getData = () => saveTodo;
@@ -109,6 +119,7 @@ const todoLogic = (() => {
     updateTodo,
     deleteTodo,
     createCategory,
+    deleteCategory,
     getOneTodo,
     getData,
   };

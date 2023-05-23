@@ -280,6 +280,7 @@ const todo = (() => {
     // build h3
     const modalH3 = buildHtml("todoH4", "h4", modalDiv);
     modalH3.textContent = "Delete The Task?";
+    modalH3.setAttribute("id", "deleteModalH3");
 
     // build close button
     const closeDiv = buildHtml("closeDiv", "button", modalDiv);
@@ -338,19 +339,34 @@ const todo = (() => {
 
     // delete method
     confirmDelete.addEventListener("click", () => {
-      // eslint-disable-next-line no-console
-      console.log("sending delete index to db...");
-      const taskToDelete = document.getElementById("deleteText");
-      const index = taskToDelete.getAttribute("data-index");
-      const section = taskToDelete.getAttribute("section");
-      // eslint-disable-next-line no-console
-      console.log(section);
-      // eslint-disable-next-line no-use-before-define
-      todoLogic.deleteTodo(getProject(), section, index);
-      // eslint-disable-next-line no-use-before-define
-      updateUi();
-      modalSection.classList.toggle("hidden");
-      modalOverlay.classList.toggle("hidden");
+      if (modalH3.innerText === "Delete This Task?") {
+        // eslint-disable-next-line no-console
+        console.log("sending delete index to db...");
+        const taskToDelete = document.getElementById("deleteText");
+        const index = taskToDelete.getAttribute("data-index");
+        const section = taskToDelete.getAttribute("section");
+        // eslint-disable-next-line no-console
+        console.log(section);
+        // eslint-disable-next-line no-use-before-define
+        todoLogic.deleteTodo(getProject(), section, index);
+        // eslint-disable-next-line no-use-before-define
+        updateUi();
+        modalSection.classList.toggle("hidden");
+        modalOverlay.classList.toggle("hidden");
+      } else if (modalH3.innerText === "Delete This Category?") {
+        // eslint-disable-next-line no-console
+        console.log("Sending delete category to db...");
+        // eslint-disable-next-line no-use-before-define
+        todoLogic.deleteCategory(getProject());
+        // eslint-disable-next-line no-use-before-define
+        const firstKey = Object.keys(todoLogic.getData())[0];
+        // eslint-disable-next-line no-use-before-define
+        projectSelect = firstKey;
+        // eslint-disable-next-line no-use-before-define
+        updateUi();
+        modalSection.classList.toggle("hidden");
+        modalOverlay.classList.toggle("hidden");
+      }
     });
   };
 
@@ -736,6 +752,10 @@ const todo = (() => {
       // modal
       const deleteSection = document.getElementById("deleteSection");
       deleteSection.classList.toggle("hidden");
+
+      // update h3 text
+      const deleteH3Title = document.getElementById("deleteModalH3");
+      deleteH3Title.innerText = "Delete This Task?";
 
       // Delete text
       const textDisplay = document.getElementById("deleteText");

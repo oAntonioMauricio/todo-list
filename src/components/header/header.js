@@ -141,9 +141,42 @@ const header = (() => {
     newCatSvg.appendChild(newCatPath);
     newCatButton.prepend(newCatSvg);
 
+    // add plus button to add a new category
+    const deleteCatButton = buildHtml("newCatButton", "button", project);
+
+    // add delete button to remove the current category
+    const svgDelete = document.createElementNS(
+      "http://www.w3.org/2000/svg",
+      "svg"
+    );
+    svgDelete.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+    svgDelete.setAttribute("fill", "none");
+    svgDelete.setAttribute("viewBox", "0 0 24 24");
+    svgDelete.setAttribute("stroke-width", "1.5");
+    svgDelete.setAttribute("stroke", "currentColor");
+    svgDelete.setAttribute("width", "20");
+    svgDelete.setAttribute("height", "20");
+    svgDelete.setAttribute("id", "svgDelete");
+
+    const deletePath = document.createElementNS(
+      "http://www.w3.org/2000/svg",
+      "path"
+    );
+    deletePath.setAttribute("stroke-linecap", "round");
+    deletePath.setAttribute("stroke-linejoin", "round");
+    deletePath.setAttribute(
+      "d",
+      "M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
+    );
+
+    svgDelete.appendChild(deletePath);
+    deleteCatButton.append(svgDelete);
+
     // built/updated with a loop on todo.js
     const ulTitles = buildHtml("ulTitles", "ul", project);
     ulTitles.setAttribute("id", "ulTitle");
+
+    // li are built on todo.js
 
     // »»» extra build ««« //
     // build modal
@@ -151,19 +184,10 @@ const header = (() => {
     newCatModal();
 
     // *** event listeners *** //
-    project.addEventListener("mouseenter", () => {
-      ulTitles.classList.add("show");
-      newCatButton.classList.add("show");
-    });
-
-    project.addEventListener("mouseleave", () => {
-      ulTitles.classList.remove("show");
-      newCatButton.classList.remove("show");
-    });
-
     projectButton.addEventListener("click", () => {
       ulTitles.classList.toggle("alwaysShow");
       newCatButton.classList.toggle("alwaysShow");
+      deleteCatButton.classList.toggle("alwaysShow");
       if (path.getAttribute("d") === "M8.25 4.5l7.5 7.5-7.5 7.5") {
         path.setAttribute("d", "M19.5 8.25l-7.5 7.5-7.5-7.5");
       } else {
@@ -173,7 +197,7 @@ const header = (() => {
 
     newCatButton.addEventListener("click", (e) => {
       // eslint-disable-next-line no-console
-      console.log("Showming modal to create new project");
+      console.log("Displaying modal to create new project");
       // cancel background touch
       e.stopPropagation();
 
@@ -188,6 +212,29 @@ const header = (() => {
       // focus on input
       const titleInput = document.getElementById("newCatName");
       titleInput.focus();
+    });
+
+    deleteCatButton.addEventListener("click", (e) => {
+      // eslint-disable-next-line no-console
+      console.log("Displaying model to delete category");
+      // cancel background touch
+      e.stopPropagation();
+
+      // overlay
+      const modalOverlay = document.getElementById("deleteOverlay");
+      modalOverlay.classList.toggle("hidden");
+
+      // modal (from todo.js)
+      const deleteSection = document.getElementById("deleteSection");
+      deleteSection.classList.toggle("hidden");
+
+      // Update h3 on delete modal (from todo.js)
+      const h3Delete = document.getElementById("deleteModalH3");
+      h3Delete.innerText = "Delete This Category?";
+
+      // Delete text
+      const textDisplay = document.getElementById("deleteText");
+      textDisplay.innerText = todo.getProject();
     });
   };
 

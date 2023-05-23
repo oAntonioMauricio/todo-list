@@ -50,11 +50,8 @@
 .projectButton {
   background-color: #0258ff;
   color: #ffffff;
-  font-size: 0.875rem;
-  line-height: 1.25rem;
-  font-weight: 500;
   border-radius: 0.5rem;
-  border-style: none;
+  border: 2px solid #0258ff;
   padding: 3px 8px;
   cursor: pointer;
 
@@ -77,7 +74,7 @@
   cursor: pointer;
   background-color: #0258ff;
   color: white;
-  border-color: white;
+  border: 2px solid white;
 }
 
 .ulTitles {
@@ -121,6 +118,7 @@
 }
 
 .svgHeader {
-  width: 1.2rem;
-  height: 1.2rem;
+  width: 20px;
+  height: 20px;
+  stroke-width: 1.5;
 }
