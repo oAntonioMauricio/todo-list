@@ -242,10 +242,11 @@ const todo = (() => {
       } else if (submitForm.innerText === "Update") {
         // eslint-disable-next-line no-console
         console.log("Sending update to db...");
+        const category = titleInput.getAttribute("category");
         const from = titleInput.getAttribute("section");
         const index = titleInput.getAttribute("data-index");
         // eslint-disable-next-line no-use-before-define
-        todoLogic.updateTodo(getProject(), from, index, {
+        todoLogic.updateTodo(category, from, index, {
           title,
           date,
           priority,
@@ -343,12 +344,12 @@ const todo = (() => {
         // eslint-disable-next-line no-console
         console.log("sending delete index to db...");
         const taskToDelete = document.getElementById("deleteText");
-        const index = taskToDelete.getAttribute("data-index");
+        const project = taskToDelete.getAttribute("category");
         const section = taskToDelete.getAttribute("section");
-        // eslint-disable-next-line no-console
-        console.log(section);
+        const index = taskToDelete.getAttribute("data-index");
+
         // eslint-disable-next-line no-use-before-define
-        todoLogic.deleteTodo(getProject(), section, index);
+        todoLogic.deleteTodo(project, section, index);
         // eslint-disable-next-line no-use-before-define
         updateUi();
         modalSection.classList.toggle("hidden");
@@ -371,7 +372,7 @@ const todo = (() => {
   };
 
   // func to build sections (name of the category: todo, done, etc..)
-  const buildSection = (h4) => {
+  const buildSection = (section, h4) => {
     const todoGrid = document.getElementById("todoGrid");
 
     // build todo tab
@@ -383,9 +384,9 @@ const todo = (() => {
 
     // build flex for todo cards
     const todoFlex = buildHtml("todoFlex", "div", todoTab);
-    todoFlex.setAttribute("id", `${h4}Parent`);
+    todoFlex.setAttribute("id", `${section}Parent`);
 
-    if (h4 !== "done") {
+    if (section !== "done") {
       // build newTodo button
       const newTodo = buildHtml("newTodo", "button", todoTab);
 
@@ -654,12 +655,14 @@ const todo = (() => {
     svgComplete.addEventListener("click", (e) => {
       // eslint-disable-next-line no-console
       console.log("task done... sending to db");
+      const project =
+        e.target.parentNode.parentNode.firstChild.getAttribute("category");
       const from = "todo";
       const moveIndex =
         e.target.parentNode.parentNode.firstChild.getAttribute("data-index");
       const to = "done";
       // eslint-disable-next-line no-use-before-define
-      todoLogic.moveTodo(getProject(), from, moveIndex, to);
+      todoLogic.moveTodo(project, from, moveIndex, to);
       // update the whole ui
       // eslint-disable-next-line no-use-before-define
       updateUi();
@@ -669,12 +672,14 @@ const todo = (() => {
     undoSvg.addEventListener("click", (e) => {
       // eslint-disable-next-line no-console
       console.log("reverting task to todo...");
+      const project =
+        e.target.parentNode.parentNode.firstChild.getAttribute("category");
       const from = "done";
       const moveIndex =
         e.target.parentNode.parentNode.firstChild.getAttribute("data-index");
       const to = "todo";
       // eslint-disable-next-line no-use-before-define
-      todoLogic.moveTodo(getProject(), from, moveIndex, to);
+      todoLogic.moveTodo(project, from, moveIndex, to);
       // update the whole ui
       // eslint-disable-next-line no-use-before-define
       updateUi();
@@ -704,17 +709,19 @@ const todo = (() => {
 
       // get data from this task from the DB
       const task = e.target.parentNode.previousElementSibling;
+      const taskCategory = task.getAttribute("category");
       const taskSection = task.getAttribute("section");
       const taskIndex = task.getAttribute("data-index");
       const taskObject = todoLogic.getOneTodo(
         // eslint-disable-next-line no-use-before-define
-        getProject(),
+        taskCategory,
         taskSection,
         taskIndex
       );
 
       // populate form with the taskObject
       titleInput.value = taskObject.title;
+      titleInput.setAttribute("category", taskCategory);
       titleInput.setAttribute("section", taskSection);
       titleInput.setAttribute("data-index", taskIndex);
       dateInput.value = taskObject.date;
@@ -771,12 +778,15 @@ const todo = (() => {
       const deleteText =
         e.target.parentNode.previousElementSibling.firstChild.innerText;
       textDisplay.innerText = deleteText;
-      const indexDisplay =
-        e.target.parentNode.previousElementSibling.getAttribute("data-index");
-      textDisplay.setAttribute("data-index", indexDisplay);
+      const projectDisplay =
+        e.target.parentNode.previousElementSibling.getAttribute("category");
+      textDisplay.setAttribute("category", projectDisplay);
       const sectionDisplay =
         e.target.parentNode.previousElementSibling.getAttribute("section");
       textDisplay.setAttribute("section", sectionDisplay);
+      const indexDisplay =
+        e.target.parentNode.previousElementSibling.getAttribute("data-index");
+      textDisplay.setAttribute("data-index", indexDisplay);
     });
   };
 
@@ -840,13 +850,11 @@ const todo = (() => {
     if (getProject() === "home") {
       // eslint-disable-next-line no-console
       console.log("building all the todos");
-      buildSection("todo");
-      buildSection("done");
+      buildSection("todo", "All Todo's");
+      buildSection("done", "All Completed Todo's");
       Object.keys(data).forEach((category) => {
         Object.keys(data[category]).forEach((section) => {
-          console.log(`${section}Parent`);
           const flexSection = document.getElementById(`${section}Parent`);
-          console.log(data[category][section]);
           // eslint-disable-next-line no-restricted-syntax, guard-for-in
           for (const task in data[category][section]) {
             const { title } = data[category][section][task];
@@ -884,7 +892,7 @@ const todo = (() => {
         if (key === getProject()) {
           // eslint-disable-next-line no-restricted-syntax, guard-for-in
           for (const section in project) {
-            buildSection(section);
+            buildSection(section, section);
             const array = project[section];
             // eslint-disable-next-line no-restricted-syntax, guard-for-in
             for (const task in array) {
