@@ -457,9 +457,9 @@ const todo = (() => {
 
     // build div for text and date
     const newEl = buildHtml("todoEl", "div", newBox);
-    newEl.setAttribute("data-index", index);
-    newEl.setAttribute("section", section);
     newEl.setAttribute("category", category);
+    newEl.setAttribute("section", section);
+    newEl.setAttribute("data-index", index);
 
     // build p for task
     const newTask = buildHtml("newTask", "p", newEl);
@@ -913,7 +913,8 @@ const todo = (() => {
                 date,
                 priority,
                 index,
-                Attsection
+                Attsection,
+                key
               );
             }
           }
