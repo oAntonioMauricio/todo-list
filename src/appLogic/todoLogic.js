@@ -13,6 +13,15 @@ const todoLogic = (() => {
             low: true,
           },
         },
+        {
+          title: "Second",
+          date: "2023-05-20",
+          priority: {
+            high: false,
+            med: false,
+            low: true,
+          },
+        },
       ],
       done: [],
     },
@@ -46,7 +55,7 @@ const todoLogic = (() => {
     }
   };
 
-  // move Todo
+  // move/check Todo
   const moveTodo = (project, from, index, to) => {
     // eslint-disable-next-line no-console
     console.log("moving todo to a differente category");

@@ -442,7 +442,15 @@ const todo = (() => {
   };
 
   // func to build box (text + buttons)
-  const todoComplete = (flexSection, text, date, priority, index, section) => {
+  const todoComplete = (
+    flexSection,
+    text,
+    date,
+    priority,
+    index,
+    section,
+    category
+  ) => {
     //
     // build div for task + buttons
     const newBox = buildHtml("todoBox", "div", flexSection);
@@ -451,6 +459,7 @@ const todo = (() => {
     const newEl = buildHtml("todoEl", "div", newBox);
     newEl.setAttribute("data-index", index);
     newEl.setAttribute("section", section);
+    newEl.setAttribute("category", category);
 
     // build p for task
     const newTask = buildHtml("newTask", "p", newEl);
@@ -801,6 +810,17 @@ const todo = (() => {
       titleBuilt.removeChild(titleBuilt.firstChild);
     }
 
+    // build li for all todo's
+    const allTodos = buildHtml("liTitles", "li", titleBuilt);
+    allTodos.innerText = "home";
+    if (getProject() === "home") {
+      allTodos.classList.add("activeLi");
+    }
+    allTodos.addEventListener("click", () => {
+      projectSelect = allTodos.innerText.toLowerCase();
+      updateUi();
+    });
+
     // build all the menu items on the header
     // also builds the event listerner for the li
     Object.keys(data).forEach((key) => {
@@ -816,36 +836,86 @@ const todo = (() => {
     });
 
     // build all from DB
-    // eslint-disable-next-line no-restricted-syntax, guard-for-in
-    for (const key in data) {
-      const project = data[key];
-      if (key === getProject()) {
-        // eslint-disable-next-line no-restricted-syntax, guard-for-in
-        for (const section in project) {
-          buildSection(section);
-          const array = project[section];
+    // check if the app is at home first, if true, build all the todos
+    if (getProject() === "home") {
+      // eslint-disable-next-line no-console
+      console.log("building all the todos");
+      buildSection("todo");
+      buildSection("done");
+      Object.keys(data).forEach((category) => {
+        Object.keys(data[category]).forEach((section) => {
+          console.log(`${section}Parent`);
+          const flexSection = document.getElementById(`${section}Parent`);
+          console.log(data[category][section]);
           // eslint-disable-next-line no-restricted-syntax, guard-for-in
-          for (const task in array) {
-            const flexSection = document.getElementById(`${section}Parent`);
-            const { title } = array[task];
-            let { date } = array[task];
+          for (const task in data[category][section]) {
+            const { title } = data[category][section][task];
+            let { date } = data[category][section][task];
             if (date) {
               // format date
               const inputDate = parseISO(date);
               date = format(inputDate, "MMMM do");
             }
-            let { priority } = array[task];
-            // check if it's all false
+            let { priority } = data[category][section][task];
             const onlyFalsePrior = Object.values(priority).every(
               (value) => value === false
             );
             if (onlyFalsePrior) {
               priority = null;
             }
-            // index
             const index = task;
             const Attsection = `${section}`;
-            todoComplete(flexSection, title, date, priority, index, Attsection);
+            todoComplete(
+              flexSection,
+              title,
+              date,
+              priority,
+              index,
+              Attsection,
+              category
+            );
+          }
+        });
+      });
+    } else {
+      // eslint-disable-next-line no-restricted-syntax, guard-for-in
+      for (const key in data) {
+        const project = data[key];
+        if (key === getProject()) {
+          // eslint-disable-next-line no-restricted-syntax, guard-for-in
+          for (const section in project) {
+            buildSection(section);
+            const array = project[section];
+            // eslint-disable-next-line no-restricted-syntax, guard-for-in
+            for (const task in array) {
+              const flexSection = document.getElementById(`${section}Parent`);
+              const { title } = array[task];
+              let { date } = array[task];
+              if (date) {
+                // format date
+                const inputDate = parseISO(date);
+                date = format(inputDate, "MMMM do");
+              }
+              let { priority } = array[task];
+              // check if it's all false
+              const onlyFalsePrior = Object.values(priority).every(
+                (value) => value === false
+              );
+              if (onlyFalsePrior) {
+                priority = null;
+              }
+              // index
+              const index = task;
+              const Attsection = `${section}`;
+              todoComplete(
+                flexSection,
+                title,
+                date,
+                priority,
+                index,
+                Attsection
+              );
+            }
           }
         }
       }

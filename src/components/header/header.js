@@ -116,6 +116,7 @@ const header = (() => {
     // menu for titles
     // add plus button to add a new category
     const newCatButton = buildHtml("newCatButton", "button", project);
+    newCatButton.classList.add("alwaysShow");
     // svg inside on plus button
     const newCatSvg = document.createElementNS(
       "http://www.w3.org/2000/svg",
@@ -143,6 +144,7 @@ const header = (() => {
 
     // add plus button to add a new category
     const deleteCatButton = buildHtml("newCatButton", "button", project);
+    deleteCatButton.classList.add("alwaysShow");
 
     // add delete button to remove the current category
     const svgDelete = document.createElementNS(
@@ -174,6 +176,7 @@ const header = (() => {
 
     // built/updated with a loop on todo.js
     const ulTitles = buildHtml("ulTitles", "ul", project);
+    ulTitles.classList.add("alwaysShow");
     ulTitles.setAttribute("id", "ulTitle");
 
     // li are built on todo.js
