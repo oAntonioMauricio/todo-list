@@ -226,6 +226,30 @@ const todo = (() => {
       event.stopPropagation();
       // eslint-disable-next-line no-console
       console.log("sending to logic...");
+      // eslint-disable-next-line no-use-before-define
+      let project = getProject();
+      // check which project is checked
+      if (project === "home") {
+        const radioButtons = document.getElementsByName("category");
+        let selectedValue;
+        for (let i = 0; i < radioButtons.length; i += 1) {
+          if (radioButtons[i].checked) {
+            selectedValue = radioButtons[i].value;
+            break;
+          }
+        }
+
+        // define project based on the selected values
+        project = selectedValue;
+
+        // prevent no categories error
+        if (project === undefined) {
+          todoLogic.createCategory("projects");
+          todoLogic.deleteTodo("projects", "todo", 0);
+          project = "projects";
+        }
+      }
+
       const title = titleInput.value;
       const date = dateInput.value;
       const priority = {
@@ -237,8 +261,7 @@ const todo = (() => {
       // actions after submiting
       // to create a new todo
       if (submitForm.innerText === "Submit") {
-        // eslint-disable-next-line no-use-before-define
-        todoLogic.createTodo(getProject(), { title, date, priority });
+        todoLogic.createTodo(project, { title, date, priority });
       } else if (submitForm.innerText === "Update") {
         // eslint-disable-next-line no-console
         console.log("Sending update to db...");
@@ -433,6 +456,51 @@ const todo = (() => {
         // modify submit button for updating
         submitButton.innerText = "Submit";
         modalTitle.innerText = "Add Task";
+
+        // delete the category form then check if we need to built it
+        const deleteCategoryFrom = document.getElementById("categoryForm");
+        if (deleteCategoryFrom) {
+          deleteCategoryFrom.remove();
+        }
+
+        // create section select when creating from home tab
+        // eslint-disable-next-line no-use-before-define
+        if (getProject() === "home") {
+          // apend new div
+          const todoForm = document.getElementById("todoForm");
+          const button = document.getElementById("submitButton");
+          const formDiv = buildHtml("formDiv", "div", todoForm);
+          formDiv.setAttribute("id", "categoryForm");
+          todoForm.insertBefore(formDiv, button);
+
+          // create label
+          const categoryLabel = buildHtml("categoryLabel", "label", formDiv);
+          categoryLabel.innerText =
+            "You don't have a category. We'll create one for you.";
+
+          // create flexbox
+          const categorySet = buildHtml("priorSet", "div", formDiv);
+
+          // create inputs  with loop from db
+          if (Object.keys(todoLogic.getData()).length !== 0) {
+            categoryLabel.innerText = "Category";
+            Object.keys(todoLogic.getData()).forEach((category) => {
+              const priorFlex = buildHtml("priorFlex", "div", categorySet);
+              // inputs
+              const catInput = buildHtml("", "input", priorFlex);
+              catInput.type = "radio";
+              catInput.id = category;
+              catInput.name = "category";
+              catInput.value = category;
+              catInput.required = true;
+
+              // labels
+              const catLabel = buildHtml("", "label", priorFlex);
+              catLabel.setAttribute("for", category);
+              catLabel.innerText = category;
+            });
+          }
+        }
 
         // open modal
         modalSection.classList.toggle("hidden");
