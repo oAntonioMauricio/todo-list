@@ -122,3 +122,16 @@
   height: 20px;
   stroke-width: 1.5;
 }
+
+@media only screen and (max-width: 767px) {
+  .logoDiv {
+    display: none;
+  }
+
+  .header {
+    grid-column: 1 / 3;
+    padding: 25px;
+    overflow: auto;
+    display: flex;
+  }
+}
