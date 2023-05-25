@@ -121,10 +121,10 @@ const todoLogic = (() => {
   };
 
   // delete category
-  const deleteCategory = (name) => {
+  const deleteCategory = (index) => {
     // eslint-disable-next-line no-console
     console.log("deleting category in db...");
-    delete saveTodo[name];
+    delete saveTodo[index];
     // eslint-disable-next-line no-console
     console.log(saveTodo);
   };
