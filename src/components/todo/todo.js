@@ -387,10 +387,13 @@ const todo = (() => {
       } else if (modalH3.innerText === "Delete This Category?") {
         // eslint-disable-next-line no-console
         console.log("Sending delete category to db...");
+        // get index at project title attribute
+        const projectTitle = document.getElementById("projectTitle");
+        const projectIndex = projectTitle.getAttribute("project-index");
         // eslint-disable-next-line no-use-before-define
-        todoLogic.deleteCategory(getProject());
+        todoLogic.deleteCategory(projectIndex);
         // eslint-disable-next-line no-use-before-define
-        const firstKey = Object.keys(todoLogic.getData())[0];
+        const firstKey = todoLogic.getData()[0].title;
         // eslint-disable-next-line no-use-before-define
         projectSelect = firstKey;
         // eslint-disable-next-line no-use-before-define
