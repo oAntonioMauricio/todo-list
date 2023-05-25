@@ -894,7 +894,7 @@ const todo = (() => {
 
   // func to define project
   // eslint-disable-next-line prefer-const
-  let projectSelect = "projects";
+  let projectSelect = "home";
 
   // func to define porject index
   let projectIndex = 0;

@@ -1,42 +1,58 @@
 // todo object to create / update todo list
 const todoLogic = (() => {
-  //
-  const saveTodo = [
-    {
-      title: "projects",
-      categories: {
-        todo: [
+  // save storage key name
+  const LOCAL_STORAGE_KEY = "saveTodo";
+
+  // Load data from local storage
+  const loadFromLocalStorage = () => {
+    const savedData = localStorage.getItem(LOCAL_STORAGE_KEY);
+    return savedData
+      ? JSON.parse(savedData)
+      : [
           {
-            title: "Your first task!",
-            date: "2023-05-20",
-            priority: {
-              high: false,
-              med: false,
-              low: true,
+            title: "projects",
+            categories: {
+              todo: [
+                {
+                  title: "Your first task!",
+                  date: "2023-05-20",
+                  priority: {
+                    high: false,
+                    med: false,
+                    low: true,
+                  },
+                },
+              ],
+              done: [],
             },
           },
-        ],
-        done: [],
-      },
-    },
-    {
-      title: "house",
-      categories: {
-        todo: [
           {
-            title: "Welcome to your new project!",
-            date: "2023-05-20",
-            priority: {
-              high: false,
-              med: false,
-              low: true,
+            title: "house",
+            categories: {
+              todo: [
+                {
+                  title: "Welcome to your new project!",
+                  date: "2023-05-20",
+                  priority: {
+                    high: false,
+                    med: false,
+                    low: true,
+                  },
+                },
+              ],
+              done: [],
             },
           },
-        ],
-        done: [],
-      },
-    },
-  ];
+        ];
+  };
+
+  // Save data to local storage
+  const saveToLocalStorage = (data) => {
+    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(data));
+  };
+
+  // Initialize data from local storage or use default
+  const saveTodo = loadFromLocalStorage();
 
   // create and add todo to DB
   const createTodo = (project, data) => {
@@ -46,6 +62,8 @@ const todoLogic = (() => {
       saveTodo[project].categories.todo.push(data);
       // eslint-disable-next-line no-console
       console.log(saveTodo);
+      // send do local storage
+      saveToLocalStorage(saveTodo);
     } else {
       // eslint-disable-next-line no-console
       console.log("Invalid argument. Please provide an object.");
@@ -63,6 +81,8 @@ const todoLogic = (() => {
     saveTodo[projectIndex].categories[to].push(todoMoving);
     // eslint-disable-next-line no-console
     console.log(saveTodo);
+    // send do local storage
+    saveToLocalStorage(saveTodo);
   };
 
   // update Todo
@@ -73,6 +93,8 @@ const todoLogic = (() => {
       saveTodo[project].categories[from][index] = data;
       // eslint-disable-next-line no-console
       console.log(saveTodo);
+      // send do local storage
+      saveToLocalStorage(saveTodo);
     } else {
       // eslint-disable-next-line no-console
       console.log("Invalid argument. Please provide an object.");
@@ -86,6 +108,8 @@ const todoLogic = (() => {
     saveTodo[projectIndex].categories[category].splice(index, 1);
     // eslint-disable-next-line no-console
     console.log(saveTodo);
+    // send do local storage
+    saveToLocalStorage(saveTodo);
   };
 
   // create a new category
@@ -101,6 +125,8 @@ const todoLogic = (() => {
     });
     // eslint-disable-next-line no-console
     console.log(saveTodo);
+    // send do local storage
+    saveToLocalStorage(saveTodo);
   };
 
   // edit category name
@@ -110,6 +136,8 @@ const todoLogic = (() => {
     saveTodo[index].title = newName;
     // eslint-disable-next-line no-console
     console.log(saveTodo);
+    // send do local storage
+    saveToLocalStorage(saveTodo);
   };
 
   // delete category
@@ -119,6 +147,8 @@ const todoLogic = (() => {
     saveTodo.splice(index, 1);
     // eslint-disable-next-line no-console
     console.log(saveTodo);
+    // send do local storage
+    saveToLocalStorage(saveTodo);
   };
 
   const getOneTodo = (project, from, index) =>
