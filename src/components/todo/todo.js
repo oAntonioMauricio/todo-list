@@ -927,8 +927,8 @@ const todo = (() => {
     // add buttons and update them with css (bring back edit/ delete) (we delete them at line 937 if === "home")
     const deleteCatButton = document.getElementById("deleteCatButton");
     const editCatButton = document.getElementById("editCatButton");
-    deleteCatButton.classList.remove("hidden");
-    editCatButton.classList.remove("hidden");
+    deleteCatButton.classList.remove("inactiveLi");
+    editCatButton.classList.remove("inactiveLi");
     // remove every li title
     while (titleBuilt.firstChild) {
       titleBuilt.removeChild(titleBuilt.firstChild);
@@ -939,8 +939,8 @@ const todo = (() => {
     allTodos.innerText = "home";
     if (getProject() === "home") {
       allTodos.classList.add("activeLi");
-      deleteCatButton.classList.add("hidden");
-      editCatButton.classList.add("hidden");
+      deleteCatButton.classList.add("inactiveLi");
+      editCatButton.classList.add("inactiveLi");
     }
     allTodos.addEventListener("click", () => {
       projectSelect = allTodos.innerText.toLowerCase();

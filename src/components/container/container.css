@@ -8,7 +8,7 @@
   background-color: #f5f7f9;
 
   display: grid;
-  grid-template-rows: 150px 1fr;
+  grid-template-rows: min-content 1fr;
   grid-template-columns: 150px 1fr;
 }
 
