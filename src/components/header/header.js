@@ -142,11 +142,42 @@ const header = (() => {
     newCatSvg.appendChild(newCatPath);
     newCatButton.prepend(newCatSvg);
 
-    // add plus button to add a new category
+    // add edit button to edit category
+    const editCatButton = buildHtml("newCatButton", "button", project);
+    editCatButton.classList.add("alwaysShow");
+
+    // svg inside edit button
+    const svgEdit = document.createElementNS(
+      "http://www.w3.org/2000/svg",
+      "svg"
+    );
+    svgEdit.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+    svgEdit.setAttribute("fill", "none");
+    svgEdit.setAttribute("viewBox", "0 0 24 24");
+    svgEdit.setAttribute("stroke-width", "1.5");
+    svgEdit.setAttribute("stroke", "currentColor");
+    svgEdit.setAttribute("width", "20");
+    svgEdit.setAttribute("height", "20");
+
+    const editPath = document.createElementNS(
+      "http://www.w3.org/2000/svg",
+      "path"
+    );
+    editPath.setAttribute("stroke-linecap", "round");
+    editPath.setAttribute("stroke-linejoin", "round");
+    editPath.setAttribute(
+      "d",
+      "M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"
+    );
+
+    svgEdit.appendChild(editPath);
+    editCatButton.appendChild(svgEdit);
+
+    // add delete button to delete a category
     const deleteCatButton = buildHtml("newCatButton", "button", project);
     deleteCatButton.classList.add("alwaysShow");
 
-    // add delete button to remove the current category
+    // svg inside delete button
     const svgDelete = document.createElementNS(
       "http://www.w3.org/2000/svg",
       "svg"
@@ -190,6 +221,7 @@ const header = (() => {
     projectButton.addEventListener("click", () => {
       ulTitles.classList.toggle("alwaysShow");
       newCatButton.classList.toggle("alwaysShow");
+      editCatButton.classList.toggle("alwaysShow");
       deleteCatButton.classList.toggle("alwaysShow");
       if (path.getAttribute("d") === "M8.25 4.5l7.5 7.5-7.5 7.5") {
         path.setAttribute("d", "M19.5 8.25l-7.5 7.5-7.5-7.5");
@@ -203,6 +235,45 @@ const header = (() => {
       console.log("Displaying modal to create new project");
       // cancel background touch
       e.stopPropagation();
+
+      // edit title of the modal
+      const modalH4 = document.getElementById("catModalH4");
+      modalH4.innerText = "Create New Category";
+
+      // edit button text
+      const button = document.getElementById("catNameButton");
+      button.innerText = "Create";
+
+      // overlay
+      const modalOverlay = document.getElementById("newCatOverlay");
+      modalOverlay.classList.toggle("hidden");
+
+      // modal
+      const deleteSection = document.getElementById("newCatSection");
+      deleteSection.classList.toggle("hidden");
+
+      // focus on input
+      const titleInput = document.getElementById("newCatName");
+      titleInput.focus();
+    });
+
+    editCatButton.addEventListener("click", (e) => {
+      // eslint-disable-next-line no-console
+      console.log("Displaying modal to edit project name");
+      // cancel background touch
+      e.stopPropagation();
+
+      // edit title of the modal
+      const modalH4 = document.getElementById("catModalH4");
+      modalH4.innerText = "Edit Category Name";
+
+      // edit button text
+      const button = document.getElementById("catNameButton");
+      button.innerText = "Edit";
+
+      // insert current title onto input
+      const modalInput = document.getElementById("newCatName");
+      modalInput.value = todo.getProject();
 
       // overlay
       const modalOverlay = document.getElementById("newCatOverlay");
@@ -259,6 +330,7 @@ const header = (() => {
 
     // build h3
     const modalH3 = buildHtml("todoH4", "h4", modalDiv);
+    modalH3.setAttribute("id", "catModalH4");
     modalH3.textContent = "Create New Category";
 
     // build close button
@@ -318,6 +390,7 @@ const header = (() => {
     );
     createNewCatName.setAttribute("form", "catForm");
     createNewCatName.setAttribute("type", "submit");
+    createNewCatName.setAttribute("id", "catNameButton");
 
     // *** event listeners ***
 
@@ -325,12 +398,14 @@ const header = (() => {
     modalOverlay.addEventListener("click", () => {
       modalSection.classList.add("hidden");
       modalOverlay.classList.add("hidden");
+      todoForm.reset();
     });
 
     // toggle modal on close button
     closeDiv.addEventListener("click", () => {
       modalSection.classList.toggle("hidden");
       modalOverlay.classList.toggle("hidden");
+      todoForm.reset();
     });
 
     // submit new category name
@@ -341,14 +416,31 @@ const header = (() => {
       if (todoForm.checkValidity()) {
         event.preventDefault();
         // Perform custom error handling or display error messages
-        // eslint-disable-next-line no-console
-        console.log("Sending new category name to DB...");
-        const newCat = titleInput.value.toLowerCase();
-        todoLogic.createCategory(newCat);
-        todo.updateUi();
-        modalSection.classList.toggle("hidden");
-        modalOverlay.classList.toggle("hidden");
-        todoForm.reset();
+        // create new name
+        if (createNewCatName.innerText === "Create") {
+          // eslint-disable-next-line no-console
+          console.log("Sending new category name to DB...");
+          const newCat = titleInput.value.toLowerCase();
+          todoLogic.createCategory(newCat);
+          todo.updateUi();
+          modalSection.classList.toggle("hidden");
+          modalOverlay.classList.toggle("hidden");
+          todoForm.reset();
+        } else if (createNewCatName.innerText === "Edit") {
+          // eslint-disable-next-line no-console
+          console.log("Instructions to edit category name to DB...");
+          const newName = titleInput.value.toLowerCase();
+          const oldName = todo.getProject();
+          todoLogic.editCategory(oldName, newName);
+          todo.updateUi();
+          const buttonToClick = document.querySelector(
+            `[projectname="${newName}"]`
+          );
+          buttonToClick.click();
+          modalSection.classList.toggle("hidden");
+          modalOverlay.classList.toggle("hidden");
+          todoForm.reset();
+        }
       }
     });
   };

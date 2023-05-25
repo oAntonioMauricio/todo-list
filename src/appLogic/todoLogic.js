@@ -101,6 +101,17 @@ const todoLogic = (() => {
     console.log(saveTodo);
   };
 
+  // edit category name
+  const editCategory = (oldName, name) => {
+    // eslint-disable-next-line no-console
+    console.log("editing category name...");
+    saveTodo[name] = saveTodo[oldName];
+    delete saveTodo[oldName];
+    // eslint-disable-next-line no-console
+    console.log(saveTodo);
+  };
+
+  // delete category
   const deleteCategory = (name) => {
     // eslint-disable-next-line no-console
     console.log("deleting category in db...");
@@ -119,6 +130,7 @@ const todoLogic = (() => {
     updateTodo,
     deleteTodo,
     createCategory,
+    editCategory,
     deleteCategory,
     getOneTodo,
     getData,

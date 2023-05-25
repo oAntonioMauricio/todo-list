@@ -914,6 +914,7 @@ const todo = (() => {
     Object.keys(data).forEach((key) => {
       const liTitle = buildHtml("liTitles", "li", titleBuilt);
       liTitle.innerText = key;
+      liTitle.setAttribute("projectName", key);
       if (key === getProject()) {
         liTitle.classList.add("activeLi");
       }
