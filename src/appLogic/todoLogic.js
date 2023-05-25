@@ -1,36 +1,42 @@
 // todo object to create / update todo list
 const todoLogic = (() => {
   //
-  const saveTodo = {
-    projects: {
-      todo: [
-        {
-          title: "Your first task!",
-          date: "2023-05-20",
-          priority: {
-            high: false,
-            med: false,
-            low: true,
+  const saveTodo = [
+    {
+      title: "projects",
+      categories: {
+        todo: [
+          {
+            title: "Your first task!",
+            date: "2023-05-20",
+            priority: {
+              high: false,
+              med: false,
+              low: true,
+            },
           },
-        },
-      ],
-      done: [],
+        ],
+        done: [],
+      },
     },
-    house: {
-      todo: [
-        {
-          title: "Welcome to your new project!",
-          date: "2023-05-20",
-          priority: {
-            high: false,
-            med: true,
-            low: false,
+    {
+      title: "house",
+      categories: {
+        todo: [
+          {
+            title: "Welcome to your new project!",
+            date: "2023-05-20",
+            priority: {
+              high: false,
+              med: true,
+              low: false,
+            },
           },
-        },
-      ],
-      done: [],
+        ],
+        done: [],
+      },
     },
-  };
+  ];
 
   // create and add todo to DB
   const createTodo = (project, data) => {

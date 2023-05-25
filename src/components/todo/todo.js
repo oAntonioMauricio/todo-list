@@ -879,7 +879,8 @@ const todo = (() => {
   const updateUi = (data = todoLogic.getData()) => {
     // eslint-disable-next-line no-console
     console.log("reloading ui...");
-    //
+
+    // select grid parent
     const parent = document.getElementById("todoGrid");
 
     // remove every todo
@@ -913,9 +914,9 @@ const todo = (() => {
     // also builds the event listerner for the li
     Object.keys(data).forEach((key) => {
       const liTitle = buildHtml("liTitles", "li", titleBuilt);
-      liTitle.innerText = key;
-      liTitle.setAttribute("projectName", key);
-      if (key === getProject()) {
+      liTitle.innerText = data[key].title;
+      liTitle.setAttribute("projectName", data[key].title);
+      if (data[key].title === getProject()) {
         liTitle.classList.add("activeLi");
       }
       liTitle.addEventListener("click", () => {
@@ -931,48 +932,83 @@ const todo = (() => {
       console.log("building all the todos");
       buildSection("todo", "All Todo's");
       buildSection("done", "All Completed Todo's");
-      Object.keys(data).forEach((category) => {
-        Object.keys(data[category]).forEach((section) => {
-          const flexSection = document.getElementById(`${section}Parent`);
+      // eslint-disable-next-line no-restricted-syntax, guard-for-in
+      for (const index in data) {
+        Object.keys(data[index].categories).forEach((category) => {
+          const flexSection = document.getElementById(`${category}Parent`);
           // eslint-disable-next-line no-restricted-syntax, guard-for-in
-          for (const task in data[category][section]) {
-            const { title } = data[category][section][task];
-            let { date } = data[category][section][task];
+          for (const objectIndex in data[index].categories[category]) {
+            const { title } = data[index].categories[category][objectIndex];
+            let { date } = data[index].categories[category][objectIndex];
             if (date) {
               // format date
               const inputDate = parseISO(date);
               date = format(inputDate, "MMMM do");
             }
-            let { priority } = data[category][section][task];
+            let { priority } = data[index].categories[category][objectIndex];
             const onlyFalsePrior = Object.values(priority).every(
               (value) => value === false
             );
             if (onlyFalsePrior) {
               priority = null;
             }
-            const index = task;
-            const Attsection = `${section}`;
+            const objIndex = objectIndex;
+            const Attsection = `${category}`;
+            const catAtt = `${data[index].title}`;
             todoComplete(
               flexSection,
               title,
               date,
               priority,
-              index,
+              objIndex,
               Attsection,
-              category
+              catAtt
             );
           }
+
+          // Object.keys(category).forEach((section) => {
+          //   // loop on each category
+          //   const flexSection = document.getElementById(`${section}Parent`);
+          //   // eslint-disable-next-line no-restricted-syntax, guard-for-in
+          //   for (const task in data[category][section]) {
+          //     const { title } = data[category][section][task];
+          //     let { date } = data[category][section][task];
+          //     if (date) {
+          //       // format date
+          //       const inputDate = parseISO(date);
+          //       date = format(inputDate, "MMMM do");
+          //     }
+          //     let { priority } = data[category][section][task];
+          //     const onlyFalsePrior = Object.values(priority).every(
+          //       (value) => value === false
+          //     );
+          //     if (onlyFalsePrior) {
+          //       priority = null;
+          //     }
+          //     const index = task;
+          //     const Attsection = `${section}`;
+          //     todoComplete(
+          //       flexSection,
+          //       title,
+          //       date,
+          //       priority,
+          //       index,
+          //       Attsection,
+          //       category
+          //     );
+          //   }
+          // });
         });
-      });
+      }
     } else {
       // eslint-disable-next-line no-restricted-syntax, guard-for-in
       for (const key in data) {
         const project = data[key];
-        if (key === getProject()) {
+        if (project.title === getProject()) {
           // eslint-disable-next-line no-restricted-syntax, guard-for-in
-          for (const section in project) {
+          for (const section in project.categories) {
             buildSection(section, section);
-            const array = project[section];
+            const array = project.categories[section];
             // eslint-disable-next-line no-restricted-syntax, guard-for-in
             for (const task in array) {
               const flexSection = document.getElementById(`${section}Parent`);
