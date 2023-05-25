@@ -169,6 +169,10 @@
   gap: 0.25rem;
 }
 
+.catLabel {
+  text-transform: capitalize;
+}
+
 .submitForm {
   background-color: #0258ff;
   color: white;

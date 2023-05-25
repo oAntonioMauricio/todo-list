@@ -13,15 +13,6 @@ const todoLogic = (() => {
             low: true,
           },
         },
-        {
-          title: "Second",
-          date: "2023-05-20",
-          priority: {
-            high: false,
-            med: false,
-            low: true,
-          },
-        },
       ],
       done: [],
     },

@@ -229,7 +229,7 @@ const todo = (() => {
       // eslint-disable-next-line no-use-before-define
       let project = getProject();
       // check which project is checked
-      if (project === "home") {
+      if (project === "home" && submitForm.innerText === "Submit") {
         const radioButtons = document.getElementsByName("category");
         let selectedValue;
         for (let i = 0; i < radioButtons.length; i += 1) {
@@ -444,7 +444,10 @@ const todo = (() => {
       const modalOverlay = document.getElementById("modalOverlay");
       const titleInput = document.getElementById("title");
 
+      //
+      //
       // »» event listeners «« //
+      //
       //
       newTodo.addEventListener("click", (e) => {
         //
@@ -496,6 +499,7 @@ const todo = (() => {
 
               // labels
               const catLabel = buildHtml("", "label", priorFlex);
+              catLabel.classList.add("catLabel");
               catLabel.setAttribute("for", category);
               catLabel.innerText = category;
             });
@@ -757,6 +761,12 @@ const todo = (() => {
     svgEdit.addEventListener("click", (e) => {
       // cancel background touch
       e.stopPropagation();
+
+      // delete the category form we wont need it because we already know the category here
+      const deleteCategoryFrom = document.getElementById("categoryForm");
+      if (deleteCategoryFrom) {
+        deleteCategoryFrom.remove();
+      }
 
       // select modal
       const modalSection = document.getElementById("modalSection");
