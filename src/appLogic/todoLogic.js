@@ -43,7 +43,7 @@ const todoLogic = (() => {
     if (typeof data === "object") {
       // eslint-disable-next-line no-console
       console.log("Running Logic...");
-      saveTodo[project].todo.push(data);
+      saveTodo[project].categories.todo.push(data);
       // eslint-disable-next-line no-console
       console.log(saveTodo);
     } else {
@@ -53,11 +53,14 @@ const todoLogic = (() => {
   };
 
   // move/check Todo
-  const moveTodo = (project, from, index, to) => {
+  const moveTodo = (projectIndex, from, index, to) => {
     // eslint-disable-next-line no-console
     console.log("moving todo to a differente category");
-    const todoMoving = saveTodo[project][from].splice(index, 1)[0];
-    saveTodo[project][to].push(todoMoving);
+    const todoMoving = saveTodo[projectIndex].categories[from].splice(
+      index,
+      1
+    )[0];
+    saveTodo[projectIndex].categories[to].push(todoMoving);
     // eslint-disable-next-line no-console
     console.log(saveTodo);
   };
@@ -67,7 +70,7 @@ const todoLogic = (() => {
     if (typeof data === "object") {
       // eslint-disable-next-line no-console
       console.log("Updating todo in db...");
-      saveTodo[project][from][index] = data;
+      saveTodo[project].categories[from][index] = data;
       // eslint-disable-next-line no-console
       console.log(saveTodo);
     } else {
@@ -80,7 +83,7 @@ const todoLogic = (() => {
   const deleteTodo = (project, category, index) => {
     // eslint-disable-next-line no-console
     console.log("deleting entry from DB...");
-    saveTodo[project][category].splice(index, 1);
+    saveTodo[project].categories[category].splice(index, 1);
     // eslint-disable-next-line no-console
     console.log(saveTodo);
   };
@@ -126,7 +129,8 @@ const todoLogic = (() => {
     console.log(saveTodo);
   };
 
-  const getOneTodo = (project, from, index) => saveTodo[project][from][index];
+  const getOneTodo = (project, from, index) =>
+    saveTodo[project].categories[from][index];
 
   const getData = () => saveTodo;
 

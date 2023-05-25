@@ -235,6 +235,11 @@ const todo = (() => {
         for (let i = 0; i < radioButtons.length; i += 1) {
           if (radioButtons[i].checked) {
             selectedValue = radioButtons[i].value;
+
+            // define project number
+            const projectTitle = document.getElementById("projectTitle");
+            projectTitle.setAttribute("project-index", i);
+
             break;
           }
         }
@@ -261,7 +266,9 @@ const todo = (() => {
       // actions after submiting
       // to create a new todo
       if (submitForm.innerText === "Submit") {
-        todoLogic.createTodo(project, { title, date, priority });
+        const projectTitle = document.getElementById("projectTitle");
+        const projectIndex = projectTitle.getAttribute("project-index");
+        todoLogic.createTodo(projectIndex, { title, date, priority });
       } else if (submitForm.innerText === "Update") {
         // eslint-disable-next-line no-console
         console.log("Sending update to db...");
@@ -487,21 +494,22 @@ const todo = (() => {
           // create inputs  with loop from db
           if (Object.keys(todoLogic.getData()).length !== 0) {
             categoryLabel.innerText = "Category";
-            Object.keys(todoLogic.getData()).forEach((category) => {
+
+            Object.keys(todoLogic.getData()).forEach((index) => {
               const priorFlex = buildHtml("priorFlex", "div", categorySet);
               // inputs
               const catInput = buildHtml("", "input", priorFlex);
               catInput.type = "radio";
-              catInput.id = category;
+              catInput.id = todoLogic.getData()[index].title;
               catInput.name = "category";
-              catInput.value = category;
+              catInput.value = todoLogic.getData()[index].title;
               catInput.required = true;
 
               // labels
               const catLabel = buildHtml("", "label", priorFlex);
               catLabel.classList.add("catLabel");
-              catLabel.setAttribute("for", category);
-              catLabel.innerText = category;
+              catLabel.setAttribute("for", todoLogic.getData()[index].title);
+              catLabel.innerText = todoLogic.getData()[index].title;
             });
           }
         }
@@ -522,7 +530,8 @@ const todo = (() => {
     priority,
     index,
     section,
-    category
+    category,
+    projectIndex
   ) => {
     //
     // build div for task + buttons
@@ -530,6 +539,7 @@ const todo = (() => {
 
     // build div for text and date
     const newEl = buildHtml("todoEl", "div", newBox);
+    newEl.setAttribute("category-index", projectIndex);
     newEl.setAttribute("category", category);
     newEl.setAttribute("section", section);
     newEl.setAttribute("data-index", index);
@@ -728,7 +738,9 @@ const todo = (() => {
       // eslint-disable-next-line no-console
       console.log("task done... sending to db");
       const project =
-        e.target.parentNode.parentNode.firstChild.getAttribute("category");
+        e.target.parentNode.parentNode.firstChild.getAttribute(
+          "category-index"
+        );
       const from = "todo";
       const moveIndex =
         e.target.parentNode.parentNode.firstChild.getAttribute("data-index");
@@ -745,7 +757,9 @@ const todo = (() => {
       // eslint-disable-next-line no-console
       console.log("reverting task to todo...");
       const project =
-        e.target.parentNode.parentNode.firstChild.getAttribute("category");
+        e.target.parentNode.parentNode.firstChild.getAttribute(
+          "category-index"
+        );
       const from = "done";
       const moveIndex =
         e.target.parentNode.parentNode.firstChild.getAttribute("data-index");
@@ -787,7 +801,7 @@ const todo = (() => {
 
       // get data from this task from the DB
       const task = e.target.parentNode.previousElementSibling;
-      const taskCategory = task.getAttribute("category");
+      const taskCategory = task.getAttribute("category-index");
       const taskSection = task.getAttribute("section");
       const taskIndex = task.getAttribute("data-index");
       const taskObject = todoLogic.getOneTodo(
@@ -857,7 +871,9 @@ const todo = (() => {
         e.target.parentNode.previousElementSibling.firstChild.innerText;
       textDisplay.innerText = deleteText;
       const projectDisplay =
-        e.target.parentNode.previousElementSibling.getAttribute("category");
+        e.target.parentNode.previousElementSibling.getAttribute(
+          "category-index"
+        );
       textDisplay.setAttribute("category", projectDisplay);
       const sectionDisplay =
         e.target.parentNode.previousElementSibling.getAttribute("section");
@@ -932,6 +948,7 @@ const todo = (() => {
       console.log("building all the todos");
       buildSection("todo", "All Todo's");
       buildSection("done", "All Completed Todo's");
+      projectTitle.setAttribute("project-index", null);
       // eslint-disable-next-line no-restricted-syntax, guard-for-in
       for (const index in data) {
         Object.keys(data[index].categories).forEach((category) => {
@@ -962,42 +979,10 @@ const todo = (() => {
               priority,
               objIndex,
               Attsection,
-              catAtt
+              catAtt,
+              index
             );
           }
-
-          // Object.keys(category).forEach((section) => {
-          //   // loop on each category
-          //   const flexSection = document.getElementById(`${section}Parent`);
-          //   // eslint-disable-next-line no-restricted-syntax, guard-for-in
-          //   for (const task in data[category][section]) {
-          //     const { title } = data[category][section][task];
-          //     let { date } = data[category][section][task];
-          //     if (date) {
-          //       // format date
-          //       const inputDate = parseISO(date);
-          //       date = format(inputDate, "MMMM do");
-          //     }
-          //     let { priority } = data[category][section][task];
-          //     const onlyFalsePrior = Object.values(priority).every(
-          //       (value) => value === false
-          //     );
-          //     if (onlyFalsePrior) {
-          //       priority = null;
-          //     }
-          //     const index = task;
-          //     const Attsection = `${section}`;
-          //     todoComplete(
-          //       flexSection,
-          //       title,
-          //       date,
-          //       priority,
-          //       index,
-          //       Attsection,
-          //       category
-          //     );
-          //   }
-          // });
         });
       }
     } else {
@@ -1005,6 +990,7 @@ const todo = (() => {
       for (const key in data) {
         const project = data[key];
         if (project.title === getProject()) {
+          projectTitle.setAttribute("project-index", key);
           // eslint-disable-next-line no-restricted-syntax, guard-for-in
           for (const section in project.categories) {
             buildSection(section, section);
@@ -1027,16 +1013,16 @@ const todo = (() => {
               if (onlyFalsePrior) {
                 priority = null;
               }
-              // index
-              const index = task;
+
               const Attsection = `${section}`;
               todoComplete(
                 flexSection,
                 title,
                 date,
                 priority,
-                index,
+                task,
                 Attsection,
+                project.title,
                 key
               );
             }
