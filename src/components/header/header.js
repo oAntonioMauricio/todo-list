@@ -145,6 +145,7 @@ const header = (() => {
     // add edit button to edit category
     const editCatButton = buildHtml("newCatButton", "button", project);
     editCatButton.classList.add("alwaysShow");
+    editCatButton.setAttribute("id", "editCatButton");
 
     // svg inside edit button
     const svgEdit = document.createElementNS(
@@ -176,6 +177,7 @@ const header = (() => {
     // add delete button to delete a category
     const deleteCatButton = buildHtml("newCatButton", "button", project);
     deleteCatButton.classList.add("alwaysShow");
+    deleteCatButton.setAttribute("id", "deleteCatButton");
 
     // svg inside delete button
     const svgDelete = document.createElementNS(
@@ -430,8 +432,8 @@ const header = (() => {
           // eslint-disable-next-line no-console
           console.log("Instructions to edit category name to DB...");
           const newName = titleInput.value.toLowerCase();
-          const oldName = todo.getProject();
-          todoLogic.editCategory(oldName, newName);
+          const index = todo.getProjectIndex();
+          todoLogic.editCategory(index, newName);
           todo.updateUi();
           const buttonToClick = document.querySelector(
             `[projectname="${newName}"]`

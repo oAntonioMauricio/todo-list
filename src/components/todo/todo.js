@@ -239,6 +239,8 @@ const todo = (() => {
             // define project number
             const projectTitle = document.getElementById("projectTitle");
             projectTitle.setAttribute("project-index", i);
+            // eslint-disable-next-line no-use-before-define
+            projectIndex = i;
 
             break;
           }
@@ -266,9 +268,8 @@ const todo = (() => {
       // actions after submiting
       // to create a new todo
       if (submitForm.innerText === "Submit") {
-        const projectTitle = document.getElementById("projectTitle");
-        const projectIndex = projectTitle.getAttribute("project-index");
-        todoLogic.createTodo(projectIndex, { title, date, priority });
+        // eslint-disable-next-line no-use-before-define
+        todoLogic.createTodo(getProjectIndex(), { title, date, priority });
       } else if (submitForm.innerText === "Update") {
         // eslint-disable-next-line no-console
         console.log("Sending update to db...");
@@ -387,13 +388,17 @@ const todo = (() => {
       } else if (modalH3.innerText === "Delete This Category?") {
         // eslint-disable-next-line no-console
         console.log("Sending delete category to db...");
-        // get index at project title attribute
-        const projectTitle = document.getElementById("projectTitle");
-        const projectIndex = projectTitle.getAttribute("project-index");
         // eslint-disable-next-line no-use-before-define
-        todoLogic.deleteCategory(projectIndex);
-        // eslint-disable-next-line no-use-before-define
-        const firstKey = todoLogic.getData()[0].title;
+        todoLogic.deleteCategory(getProjectIndex());
+        // eslint-disable-next-line no-use-before-define, dot-notation
+        // set project to the first one on the array
+        // if there's no one go home
+        let firstKey;
+        if (todoLogic.getData().length !== 0) {
+          firstKey = todoLogic.getData()[0].title;
+        } else {
+          firstKey = "home";
+        }
         // eslint-disable-next-line no-use-before-define
         projectSelect = firstKey;
         // eslint-disable-next-line no-use-before-define
@@ -891,8 +896,14 @@ const todo = (() => {
   // eslint-disable-next-line prefer-const
   let projectSelect = "projects";
 
+  // func to define porject index
+  let projectIndex = 0;
+
   // fun to get project
   const getProject = () => projectSelect;
+
+  // func to getproject index
+  const getProjectIndex = () => projectIndex;
 
   // func to update ui
   const updateUi = (data = todoLogic.getData()) => {
@@ -913,6 +924,11 @@ const todo = (() => {
     // update title
     const projectTitle = document.getElementById("projectTitle");
     projectTitle.innerText = getProject();
+    // add buttons and update them with css (bring back edit/ delete) (we delete them at line 937 if === "home")
+    const deleteCatButton = document.getElementById("deleteCatButton");
+    const editCatButton = document.getElementById("editCatButton");
+    deleteCatButton.classList.remove("hidden");
+    editCatButton.classList.remove("hidden");
     // remove every li title
     while (titleBuilt.firstChild) {
       titleBuilt.removeChild(titleBuilt.firstChild);
@@ -923,6 +939,8 @@ const todo = (() => {
     allTodos.innerText = "home";
     if (getProject() === "home") {
       allTodos.classList.add("activeLi");
+      deleteCatButton.classList.add("hidden");
+      editCatButton.classList.add("hidden");
     }
     allTodos.addEventListener("click", () => {
       projectSelect = allTodos.innerText.toLowerCase();
@@ -994,6 +1012,7 @@ const todo = (() => {
         const project = data[key];
         if (project.title === getProject()) {
           projectTitle.setAttribute("project-index", key);
+          projectIndex = key;
           // eslint-disable-next-line no-restricted-syntax, guard-for-in
           for (const section in project.categories) {
             buildSection(section, section);
@@ -1035,7 +1054,7 @@ const todo = (() => {
     }
   };
 
-  return { build, getProject, updateUi };
+  return { build, getProject, getProjectIndex, updateUi };
 })();
 
 export default todo;

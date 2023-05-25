@@ -111,11 +111,10 @@ const todoLogic = (() => {
   };
 
   // edit category name
-  const editCategory = (oldName, name) => {
+  const editCategory = (index, newName) => {
     // eslint-disable-next-line no-console
     console.log("editing category name...");
-    saveTodo[name] = saveTodo[oldName];
-    delete saveTodo[oldName];
+    saveTodo[index].title = newName;
     // eslint-disable-next-line no-console
     console.log(saveTodo);
   };
@@ -124,7 +123,7 @@ const todoLogic = (() => {
   const deleteCategory = (index) => {
     // eslint-disable-next-line no-console
     console.log("deleting category in db...");
-    delete saveTodo[index];
+    saveTodo.splice(index, 1);
     // eslint-disable-next-line no-console
     console.log(saveTodo);
   };
