@@ -252,7 +252,7 @@ const todo = (() => {
         // prevent no categories error
         if (project === undefined) {
           todoLogic.createCategory("projects");
-          todoLogic.deleteTodo("projects", "todo", 0);
+          todoLogic.deleteTodo(0, "todo", 0);
           project = "projects";
         }
       }

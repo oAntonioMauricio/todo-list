@@ -28,8 +28,8 @@ const todoLogic = (() => {
             date: "2023-05-20",
             priority: {
               high: false,
-              med: true,
-              low: false,
+              med: false,
+              low: true,
             },
           },
         ],
@@ -80,10 +80,10 @@ const todoLogic = (() => {
   };
 
   // delete task from DB
-  const deleteTodo = (project, category, index) => {
+  const deleteTodo = (projectIndex, category, index) => {
     // eslint-disable-next-line no-console
     console.log("deleting entry from DB...");
-    saveTodo[project].categories[category].splice(index, 1);
+    saveTodo[projectIndex].categories[category].splice(index, 1);
     // eslint-disable-next-line no-console
     console.log(saveTodo);
   };
@@ -92,20 +92,13 @@ const todoLogic = (() => {
   const createCategory = (name) => {
     // eslint-disable-next-line no-console
     console.log("creating new category in db...");
-    saveTodo[name] = {
-      todo: [
-        {
-          title: "Welcome to your new project!",
-          date: "2023-05-20",
-          priority: {
-            high: false,
-            med: true,
-            low: false,
-          },
-        },
-      ],
-      done: [],
-    };
+    saveTodo.push({
+      title: name,
+      categories: {
+        todo: [],
+        done: [],
+      },
+    });
     // eslint-disable-next-line no-console
     console.log(saveTodo);
   };
