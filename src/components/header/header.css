@@ -40,8 +40,8 @@
 }
 
 .project.project-expand {
-  max-height: 125px !important;
-  max-width: 80vw !important;
+  max-height: 125px;
+  max-width: 80vw;
 }
 
 .project .projectFlex {
