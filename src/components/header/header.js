@@ -121,9 +121,12 @@ const header = (() => {
     categoryFlex.classList.add("alwaysShow");
     categoryFlex.setAttribute("id", "categoryFlex");
 
+    // button flex
+    const buttonFlex = buildHtml("buttonFlex", "div", categoryFlex);
+
     // menu for titles
     // add plus button to add a new category
-    const newCatButton = buildHtml("newCatButton", "button", categoryFlex);
+    const newCatButton = buildHtml("newCatButton", "button", buttonFlex);
     newCatButton.classList.add("alwaysShow");
     // svg inside on plus button
     const newCatSvg = document.createElementNS(
@@ -151,7 +154,7 @@ const header = (() => {
     newCatButton.prepend(newCatSvg);
 
     // add edit button to edit category
-    const editCatButton = buildHtml("newCatButton", "button", categoryFlex);
+    const editCatButton = buildHtml("newCatButton", "button", buttonFlex);
     editCatButton.classList.add("alwaysShow");
     editCatButton.setAttribute("id", "editCatButton");
 
@@ -183,7 +186,7 @@ const header = (() => {
     editCatButton.appendChild(svgEdit);
 
     // add delete button to delete a category
-    const deleteCatButton = buildHtml("newCatButton", "button", categoryFlex);
+    const deleteCatButton = buildHtml("newCatButton", "button", buttonFlex);
     deleteCatButton.classList.add("alwaysShow");
     deleteCatButton.setAttribute("id", "deleteCatButton");
 

@@ -82,6 +82,11 @@
   gap: 1rem;
 }
 
+.buttonFlex {
+  display: flex;
+  gap: 1rem;
+}
+
 .newCatButton {
   visibility: hidden;
   align-items: center;
@@ -151,7 +156,7 @@
 
 .alwaysShow {
   visibility: visible;
-  display: inline-flex;
+  display: flex;
 }
 
 .svgHeader {
@@ -170,5 +175,19 @@
     padding: 25px;
     overflow: auto;
     display: flex;
+  }
+
+  .project.project-expand {
+    max-height: 125px;
+    max-width: 75vw;
+  }
+
+  .categoryFlex {
+    gap: 0.5rem;
+  }
+
+  .categoryFlex.alwaysShow {
+    display: flex;
+    flex-direction: column;
   }
 }
