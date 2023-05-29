@@ -329,6 +329,15 @@ const header = (() => {
         textDisplay.innerText = todo.getProject();
       }
     });
+
+    ulTitles.addEventListener("wheel", (event) => {
+      // Get the scroll amount from the wheel event
+      const delta = event.deltaY || event.detail || event.wheelDelta;
+
+      // Modify the scrollLeft property based on the scroll amount
+      ulTitles.scrollLeft += delta > 0 ? 100 : -100; // Adjust the scroll speed as needed
+      event.preventDefault(); // Prevent the default scroll behavior
+    });
   };
 
   const newCatModal = () => {

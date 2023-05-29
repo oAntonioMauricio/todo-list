@@ -28,6 +28,7 @@
   gap: 1rem;
 
   height: min-content;
+  max-width: 80vw;
 
   background-color: white;
   padding: 1rem 1.5rem;
@@ -36,7 +37,7 @@
     0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 
-.projectFlex {
+.project .projectFlex {
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -70,11 +71,13 @@
 
 .categoryFlex {
   display: none;
+  max-width: 100%;
   gap: 1rem;
 }
 
 .newCatButton {
   display: none;
+  align-items: center;
 
   background-color: transparent;
   border: 2px solid #c7c7c7;
@@ -98,7 +101,12 @@
   background-color: white;
   margin: 0;
   padding: 0;
+  padding-top: 5px;
+  padding-bottom: 5px;
   list-style-type: none;
+
+  overflow: auto;
+  scroll-behavior: smooth;
 }
 
 .liTitles {
