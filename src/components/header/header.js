@@ -80,6 +80,7 @@ const header = (() => {
     // project
     const project = document.createElement("div");
     project.classList.add("project");
+    project.classList.add("project-expand");
     project.setAttribute("id", "headerProject");
     projectDiv.append(project);
 
@@ -233,6 +234,9 @@ const header = (() => {
       editCatButton.classList.toggle("alwaysShow");
       deleteCatButton.classList.toggle("alwaysShow");
       categoryFlex.classList.toggle("alwaysShow");
+      project.classList.toggle("project-expand");
+
+      //
       if (path.getAttribute("d") === "M8.25 4.5l7.5 7.5-7.5 7.5") {
         path.setAttribute("d", "M19.5 8.25l-7.5 7.5-7.5-7.5");
       } else {
